@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Ký số ATTK 36819</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:20px;background:#fff;color:#222}
+button{padding:8px 16px;font-size:15px;margin-right:8px}
+table{border-collapse:collapse;margin-top:12px}td,th{border:1px solid #ccc;padding:3px 8px;font-size:13px}
+.ok{color:#080}.err{color:#c00}
+</style></head><body>
+<h3>Ký số ATTK – file 36819 (<span id="tong"></span> hồ sơ)</h3>
+<p>Bấm <b>Bắt đầu</b> để gọi API ký số lần lượt cho từng SO_ID_YC. Trình duyệt không đọc được nội dung trả về
+(khác domain), nên cột trạng thái chỉ cho biết yêu cầu đã gửi đi được hay chưa. Muốn xem kết quả của 1 hồ sơ, bấm vào link của hồ sơ đó.</p>
+<button id="start">Bắt đầu</button><button id="stop">Dừng</button> <span id="tt"></span>
+<table><thead><tr><th>#</th><th>SO_ID_YC</th><th>Trạng thái</th></tr></thead><tbody id="ds"></tbody></table>
+<script>
+const API = "http://sign.abic.com.vn/bancaapi/attk/sign?b_so_id=";
+const ids = "26092600059011,26092600059013,26092600059015,26092600059017,26092600059019,26092600059021,26092600059023,26092600059025,26092600059027,26092600059031,26092600059033,26092600059035,26092600059037,26092600059041,26092600059043,26092600059045,26092600059047,26092600059049,26092600059051,26092600059053,26092600059055,26092600059057,26092600059059,26092600059061,26092600059063,26092600059065,26092600059067,26092600059069,26092600059071,26092600059073,26092600059075,26092600059077,26092600059079,26092600059081,26092600059083,26092600059085,26092600059087,26092600059089,26092600059091,26092600059093,26092600059095,26092600059097,26092600059099,26092600059101,26092600059103,26092600059105,26092600059107,26092600059109,26092600059111,26092600059113,26092600059115,26092600059117,26092600059119,26092600059121,26092600059123,26092600059125,26092600059127,26092600059129,26092600059131,26092600059133,26092600059135");
+const tb = document.getElementById("ds"), tt = document.getElementById("tt");
+document.getElementById("tong").textContent = ids.length;
+ids.forEach((id, i) => tb.insertAdjacentHTML("beforeend",
+  '<tr><td>' + (i + 1) + '</td><td><a target="_blank" href="' + API + id + '">' + id + '</a></td><td id="s' + i + '"></td></tr>'));
+let dung = false;
+document.getElementById("stop").onclick = () => dung = true;
+document.getElementById("start").onclick = async () => {
+  dung = false; let ok = 0, loi = 0;
+  for (let i = 0; i < ids.length && !dung; i++) {
+    const c = document.getElementById("s" + i);
+    if (c.className === "ok") continue;           // bo qua ho so da gui thanh cong
+    c.textContent = "đang gửi..."; c.className = "";
+    try { await fetch(API + ids[i], { mode: "no-cors", cache: "no-store" }); c.textContent = "đã gửi"; c.className = "ok"; ok++; }
+    catch (e) { c.textContent = "lỗi kết nối"; c.className = "err"; loi++; }
+    tt.textContent = (i + 1) + "/" + ids.length + " – đã gửi: " + ok + ", lỗi: " + loi;
+  }
+};
+</script></body></html>
