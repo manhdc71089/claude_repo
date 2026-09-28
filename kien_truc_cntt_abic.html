@@ -156,6 +156,45 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 .count{color:var(--ink-3);font-size:12px;margin-left:auto}
 .note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
 .callout{border-left:3px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px}
+/* architecture map */
+.arch{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:4px}
+.acol{flex:1 1 0;min-width:128px;border-radius:12px;background:var(--lc-bg);border:1px solid var(--lc-bd);padding:10px;display:flex;flex-direction:column;gap:10px}
+.acol.wide{flex:1.9 1 0;min-width:230px}
+.acol .ah,.aband .ah{border-radius:8px;background:var(--lc);color:#fff;padding:8px 10px}
+.ah b{display:block;font-size:12.5px;line-height:1.3}
+.ah small{font-size:11px;opacity:.85}
+.agt{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--lc-ink);font-weight:700;margin:0 2px 5px}
+.agn{display:flex;flex-direction:column;gap:6px}
+.acol.wide .agn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.an{background:var(--panel);border:1px solid var(--lc-bd);border-left:3px solid var(--lc);border-radius:7px;padding:6px 8px;cursor:pointer;min-width:0;transition:transform .12s,box-shadow .12s}
+.an:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--lc)}
+.an b{display:block;font-size:10.5px;color:var(--lc-ink);letter-spacing:.03em}
+.an span{display:block;font-size:12px;line-height:1.3;color:var(--ink);overflow-wrap:anywhere}
+.arrow{flex:none;width:22px;align-self:center;height:22px;position:relative}
+.arrow::before{content:"";position:absolute;left:3px;right:6px;top:10px;height:2px;background:var(--ink-3)}
+.arrow::after{content:"";position:absolute;right:2px;top:6px;border:5px solid transparent;border-left:7px solid var(--ink-3);border-right:0}
+.aband{--lc:#5b6770;--lc-bg:var(--panel-2);--lc-bd:var(--line);--lc-ink:var(--ink-2);margin-top:12px;border:1px dashed var(--line);border-radius:12px;padding:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel-2)}
+.aband .agn{flex-direction:row;flex-wrap:wrap}
+.aband .bnote{font-size:12px;color:var(--ink-3)}
+.acol.nd{--lc:#3d5a80;--lc-bg:#eef2f8;--lc-bd:#d5deeb;--lc-ink:#3d5a80}
+.acol.tb{--lc:#0a6e3c;--lc-bg:#eaf5ef;--lc-bd:#cfe6d9;--lc-ink:#0a6e3c}
+.acol.th{--lc:#b35c00;--lc-bg:#fdf3e7;--lc-bd:#f1dcc0;--lc-ink:#a15300}
+.acol.nv{--lc:#6a3fa0;--lc-bg:#f3eefa;--lc-bd:#e0d4ef;--lc-ink:#6a3fa0}
+.acol.dl{--lc:#1f5fae;--lc-bg:#ebf2fb;--lc-bd:#d0dff2;--lc-ink:#1f5fae}
+.acol.ng{--lc:#8a4b2c;--lc-bg:#f7efea;--lc-bd:#e8d8cd;--lc-ink:#8a4b2c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .acol.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
+:root:not([data-theme="light"]) .acol.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
+:root:not([data-theme="light"]) .acol.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
+:root:not([data-theme="light"]) .acol.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
+:root:not([data-theme="light"]) .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
+:root:not([data-theme="light"]) .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
+}
+:root[data-theme="dark"] .acol.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
+:root[data-theme="dark"] .acol.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
+:root[data-theme="dark"] .acol.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
+:root[data-theme="dark"] .acol.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
+:root[data-theme="dark"] .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
+:root[data-theme="dark"] .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:320px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px}
@@ -174,6 +213,9 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
   .content{padding:16px 16px 40px}
   .g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}
   .layer{grid-template-columns:1fr}
+  .arch{flex-direction:column;overflow:visible}
+  .acol,.acol.wide{min-width:0}
+  .arrow{transform:rotate(90deg);margin:2px 0}
   .kpi-row.g4,.k6{grid-template-columns:repeat(2,minmax(0,1fr))}
   .z5{grid-template-columns:minmax(0,1fr)}
 }
@@ -398,23 +440,29 @@ const SECTIONS = [
     ["1.107","Bảng trong schema KT_ABIC","2.517 procedure · 111 package"],
     [5,"Vùng mạng","Đại lý · Cộng đồng · Đối tác · Nội bộ · CSDL"],
   ];
-  const layers = [
-    ["Người sử dụng","ND01–ND05",["ND01","ND02","ND03","ND04","ND05"]],
-    ["Lớp trình bày","TB01–TB25",COMP.filter(c=>c.layer==="Lớp trình bày").map(c=>c.code)],
-    ["Lớp tích hợp","TH01–TH11",COMP.filter(c=>c.layer==="Lớp tích hợp").map(c=>c.code)],
-    ["Lớp nghiệp vụ","NV01–NV10",COMP.filter(c=>c.layer==="Lớp nghiệp vụ").map(c=>c.code)],
-    ["Lớp dữ liệu","DL01–DL05",["DL01","DL02","DL03","DL04","DL05"]],
-    ["Hạ tầng dùng chung","HT01–HT02",["HT01","HT02"]],
-    ["Hệ thống ngoài","NG01–NG14",COMP.filter(c=>c.layer==="Hệ thống ngoài").map(c=>c.code)],
+  // Sơ đồ tổng quan: chỉ thành phần tiêu biểu, các lớp xếp từ trái sang phải
+  const MAP = [
+    {k:"nd", t:"Người sử dụng", r:"ND01–ND05", g:[["",["ND01","ND02","ND03","ND04","ND05"]]]},
+    {k:"tb", t:"Lớp trình bày", r:"TB01–TB25", wide:true, g:[
+      ["Nội bộ ABIC",["TB01","TB02","TB03","TB05","TB09","TB10"]],
+      ["Người bán",["TB13","TB17"]],["Đầu mối Agribank",["TB18"]],
+      ["Khách hàng",["TB19","TB20","TB21"]],["Dùng chung",["TB25"]]]},
+    {k:"th", t:"Lớp tích hợp", r:"TH01–TH11", g:[["",["TH01","TH02","TH03","TH05","TH08"]]]},
+    {k:"nv", t:"Lớp nghiệp vụ", r:"NV01–NV10", g:[["Trong CSDL",["NV01","NV02"]],["Dịch vụ nền",["NV03","NV04","NV06","NV08"]]]},
+    {k:"dl", t:"Lớp dữ liệu", r:"DL01–DL05", g:[["",["DL01","DL02","DL03","DL04"]]]},
+    {k:"ng", t:"Hệ thống ngoài", r:"NG01–NG14", g:[["Ngân hàng, thanh toán",["NG01","NG04"]],["Dịch vụ số",["NG06","NG08","NG09","NG14"]]]},
   ];
+  const short = c => BY[c].name.replace(/ \(VB6\)/,"").replace("Agribank — hệ thống thu phí","Agribank thu phí");
+  const archNode = c => `<div class="an" data-code="${c}"><b>${c}</b><span>${esc(short(c))}</span></div>`;
+  const archMap = `<div class="arch">${MAP.map((col,i)=>`${i?'<div class="arrow" aria-hidden="true"></div>':''}<div class="acol ${col.k}${col.wide?' wide':''}"><div class="ah"><b>${col.t}</b><small>${col.r}</small></div>${col.g.map(([gt,codes])=>`<div class="ag">${gt?`<div class="agt">${gt}</div>`:''}<div class="agn">${codes.map(archNode).join("")}</div></div>`).join("")}</div>`).join("")}</div>
+    <div class="aband"><div class="ah"><b>Hạ tầng dùng chung</b><small>HT01–HT02</small></div><div class="agn">${archNode("HT01")}${archNode("HT02")}</div><div class="bnote">Ký số và truy cập từ xa, dùng xuyên suốt các lớp</div></div>`;
   const st = {}; COMP.filter(c=>c.status).forEach(c=>st[c.status]=(st[c.status]||0)+1);
   const stTotal = Object.values(st).reduce((a,b)=>a+b,0);
   return `
   <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Nghiệp vụ lõi là thủ tục PL/SQL trong CSDL; người sử dụng, đối tác và nhà cung cấp kết nối qua ClosedAPI, OpenAPI và API kênh Agribank. Di chuột lên mã thành phần để xem mô tả, bấm để mở danh mục.</p>
   <div class="grid g4 kpi-row">${kpis.map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
-  <div class="grid g3" style="grid-template-columns:2fr 1fr">
-    ${card("Sơ đồ phân lớp",`<div class="layers">${layers.map(l=>`<div class="layer"><div class="ln">${l[0]}<small>${l[1]}</small></div><div class="lc">${l[2].map(node).join("")}</div></div>`).join("")}</div><p class="note">Viền nét đứt: thành phần chưa ở trạng thái vận hành (thí điểm, đang xây dựng, chuyển vào ClosedAPI, độc lập).</p>`)}
-    <div class="card-stack">
+  ${card("Bức tranh hệ thống",archMap+`<p class="note">Chỉ thể hiện thành phần tiêu biểu; danh sách đầy đủ ở Phụ lục A. Di chuột lên thành phần để xem mô tả, bấm để mở danh mục.</p>`,"Luồng từ trái sang phải")}
+  <div class="grid g2">
       ${card("Trạng thái thành phần",Object.entries(st).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;margin-bottom:4px">${badge(k)}<span class="mono">${v}</span></div><div class="bar" style="grid-template-columns:1fr"><div class="t"><i style="width:${v/stTotal*100}%"></i></div></div></div>`).join(""))}
       ${card("Mốc sắp tới",`<div class="tl">
         <div class="ev"><div class="d">01/10/2026</div><div class="n">Chạy song song hạ tầng mới</div><div class="x">35 ứng dụng sang 18 máy chủ theo vùng</div></div>
@@ -422,7 +470,6 @@ const SECTIONS = [
         <div class="ev"><div class="d">10/2026</div><div class="n">SSO toàn bộ</div><div class="x">Kể cả ứng dụng VB6</div></div>
         <div class="ev"><div class="d">30/10/2026</div><div class="n">Hoàn tất di dời · ClosedAPI nhóm đầu</div><div class="x">Đóng cổng Internet cũ, bắt buộc VPN</div></div>
       </div>`)}
-    </div>
   </div>
   ${card("Đặc điểm chính",ul([
     "Nghiệp vụ lõi (bảo hiểm gốc, đồng và tái bảo hiểm, kế toán) là thủ tục PL/SQL trong CSDL giao dịch. Engine WF điều phối quy trình tự động ngay trong CSDL.",
