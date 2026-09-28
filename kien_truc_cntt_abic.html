@@ -210,7 +210,7 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 const COMP = [
  // Người sử dụng
  ["ND01","Nội bộ ABIC","Người sử dụng","Tác nhân","","","","","Cán bộ hội sở, chi nhánh"],
- ["ND02","Lực lượng bán","Người sử dụng","Tác nhân","","","","","Cán bộ Agribank, đại lý, cán bộ bán hàng ABIC"],
+ ["ND02","Người bán","Người sử dụng","Tác nhân","","","","","Cán bộ Agribank, đại lý, cán bộ bán hàng ABIC"],
  ["ND03","Khách hàng","Người sử dụng","Tác nhân","","","","","Cá nhân, doanh nghiệp mua bảo hiểm"],
  ["ND04","Đầu mối Agribank","Người sử dụng","Tác nhân","","","","","Đầu mối các cấp của Agribank xem, đối chiếu báo cáo banca"],
  ["ND05","Hệ thống đối tác","Người sử dụng","Tác nhân","","","","","Hệ thống của đối tác gọi API để bán, nhúng bảo hiểm"],
@@ -234,14 +234,14 @@ const COMP = [
  ["TB17","Sale","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Bán hàng trực tuyến cho đại lý, cán bộ ABIC"],
  ["TB18","BC2C","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Báo cáo banca hai chiều hằng tháng: tự tổng hợp, cán bộ ABIC xác nhận, thông báo đầu mối Agribank qua Zalo"],
  ["TB19","TraCuu","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Tra cứu hợp đồng, giấy chứng nhận bảo hiểm cho khách hàng"],
- ["TB20","Web bán hàng trực tuyến","Lớp trình bày","Web","Cộng đồng · Internet","IIS","3","Vận hành","Khách hàng mua sản phẩm bán lẻ; đối tác phát triển, bàn giao trọn gói"],
+ ["TB20","Web bán hàng trực tuyến","Lớp trình bày","Web","Cộng đồng · Internet","IIS","3","Vận hành","Khách hàng mua sản phẩm bán lẻ"],
  ["TB21","MyAbic","Lớp trình bày","Ứng dụng di động","Internet","","","Vận hành","Ứng dụng khách hàng: mua sản phẩm bán lẻ, quản lý hợp đồng"],
  ["TB22","Payment","Lớp trình bày","Web","Cộng đồng · Internet",".NET, IIS","5","Vận hành","Thanh toán trực tuyến; nhận thông báo kết quả từ trung gian thanh toán"],
  ["TB23","Home page","Lớp trình bày","Web","Cộng đồng · Internet","IIS","5","Vận hành","Cổng thông tin công ty; đối tác phát triển, bàn giao trọn gói"],
  ["TB24","Viewer","Lớp trình bày","Thành phần nhúng","Internet","Sản phẩm thương mại","1–4","Vận hành","Xem file đính kèm, nhúng vào các web"],
  ["TB25","Power BI","Lớp trình bày","Công cụ phân tích","Nội bộ","Power BI","","Vận hành","Phân tích số liệu từ CSDL báo cáo"],
  // Lớp tích hợp
- ["TH01","SSO","Lớp tích hợp","Dịch vụ định danh","Internet","IdentityServer, OIDC","5","Vận hành","Đăng nhập một lần cho ứng dụng của người dùng nội bộ, lực lượng bán, gồm cả VB6; kèm cổng quản trị"],
+ ["TH01","SSO","Lớp tích hợp","Dịch vụ định danh","Internet","IdentityServer, OIDC","5","Vận hành","Đăng nhập một lần cho ứng dụng của người dùng nội bộ và Người bán, gồm cả VB6; kèm cổng quản trị"],
  ["TH02","ClosedAPI","Lớp tích hợp","API","Nội bộ · Intranet",".NET 8, IIS, REST/JSON","5","Vận hành","Cổng dữ liệu nội bộ, cửa duy nhất vào CSDL; gọi thủ tục KT_ABIC; kiêm tích hợp Agribank (thu hộ QR), Zalo ZNS, URBOX, AICycle, Elastic"],
  ["TH03","OpenAPI","Lớp tích hợp","API","Đối tác · Internet",".NET, IIS","5","Vận hành","API cho đối tác, kênh số; whitelist IP"],
  ["TH04","OpenAPI Banca","Lớp tích hợp","API","Đại lý · Intranet, DC Agribank",".NET, IIS","4","Vận hành","API cho kênh banca Agribank"],
@@ -260,7 +260,6 @@ const COMP = [
  ["NV06","eInvoice","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Phát hành hóa đơn điện tử qua nhà cung cấp"],
  ["NV07","SyncFile","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Đồng bộ file chứng từ về kho file"],
  ["NV08","Ký số Service","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","4–5","Vận hành","Ký số chứng từ"],
- ["NV09","KtKySo","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ",".NET 8, Windows Service","","Đang xây dựng","Ký số chứng từ kế toán"],
  ["NV10","BACT Service","Lớp nghiệp vụ","Dịch vụ nền","Đại lý · Intranet, DC Agribank",".NET, Windows Service","4","Vận hành","Gửi yêu cầu thu phí Bảo an chủ thẻ tới ngân hàng (thu hộ)"],
  // Lớp dữ liệu
  ["DL01","CSDL giao dịch","Lớp dữ liệu","CSDL","CSDL","Oracle 19c RAC","","Vận hành","KT_ABIC (nghiệp vụ lõi), W_ABIC (ứng dụng web), LOGCTR (log)"],
@@ -393,8 +392,8 @@ const SECTIONS = [
     [n("Lớp trình bày"),"Ứng dụng lớp trình bày","TB01–TB25"],
     [n("Lớp tích hợp"),"Thành phần tích hợp","API, SSO · TH01–TH11"],
     [KN_ALL.length,"Kết nối được mô tả","KN01–KN55"],
-    [18,"Máy chủ ứng dụng","Bố trí từ 30/10/2026"],
-    [n("Lớp nghiệp vụ"),"Thành phần nghiệp vụ","Lõi, WF, 7 dịch vụ nền"],
+    [18,"Máy chủ ứng dụng","Theo 5 vùng mạng"],
+    [n("Lớp nghiệp vụ"),"Thành phần nghiệp vụ","Lõi, engine WF, dịch vụ nền"],
     [n("Hệ thống ngoài"),"Hệ thống bên ngoài","Ngân hàng, thanh toán, dịch vụ số"],
     ["1.107","Bảng trong schema KT_ABIC","2.517 procedure · 111 package"],
     [5,"Vùng mạng","Đại lý · Cộng đồng · Đối tác · Nội bộ · CSDL"],
@@ -470,7 +469,7 @@ const SECTIONS = [
   <div class="grid g2">
   ${card("2.1 Người sử dụng",T(["Mã","Người sử dụng","Kênh truy cập"],[
     ["ND01","Nội bộ ABIC","Ứng dụng desktop VB6; web nội bộ, qua VPN khi ở ngoài văn phòng; văn phòng điện tử"],
-    ["ND02","Lực lượng bán","Banca qua mạng riêng Agribank; Banca Internet; Ctien; Sale; màn hình cấp đơn nhúng trong web banca Agribank"],
+    ["ND02","Người bán","Banca qua mạng riêng Agribank; Banca Internet; Ctien; Sale; màn hình cấp đơn nhúng trong web banca Agribank"],
     ["ND03","Khách hàng","Web bán hàng trực tuyến; ứng dụng MyAbic; Payment; TraCuu; Home page"],
     ["ND04","Đầu mối Agribank","BC2C, nhận thông báo qua Zalo OA"],
     ["ND05","Hệ thống đối tác","OpenAPI"]]))}
@@ -493,17 +492,17 @@ const SECTIONS = [
     ["NT01","Đặc quyền tối thiểu","Không mở dịch vụ ra Internet trừ khi bắt buộc. Ứng dụng nội bộ truy cập từ ngoài văn phòng phải qua VPN","Phân vùng mạng; HT02"],
     ["NT02","Phân vùng theo đối tượng sử dụng","Vùng Đại lý, Cộng đồng, Đối tác, Nội bộ, CSDL; vùng CSDL tách riêng; không dùng mạng phẳng, không quản trị dịch vụ theo IP","Chương 8"],
     ["NT03","ClosedAPI là cửa vào CSDL","Ứng dụng ở các vùng ngoài không nối CSDL trực tiếp; tường lửa chỉ cho máy chủ ClosedAPI vào cổng CSDL","TH02; chương 10"],
-    ["NT04","Hiện đại hóa vận hành","Tài khoản định danh cá nhân thay tài khoản dùng chung; dịch vụ chạy Windows Service với gMSA thay Task Scheduler; triển khai qua GitLab CI/CD; chuẩn .NET 8","Chương 8, 10"],
+    ["NT04","Hiện đại hóa vận hành","Tài khoản định danh cá nhân thay tài khoản dùng chung; dịch vụ chạy Windows Service với gMSA; triển khai qua GitLab CI/CD; chuẩn .NET 8","Chương 8, 10"],
     ["NT05","Một bộ điều phối quy trình","Quy trình tự động nhiều bước chạy trên engine WF; không dựng bộ điều phối riêng","NV02"],
     ["NT06","CSDL không gọi ra ngoài","Nghiệp vụ ghi việc vào bảng chờ, hàng đợi; dịch vụ nền hoặc API thực hiện trao đổi với bên ngoài","Chương 6"],
     ["NT07","Báo cáo đọc trên bản sao","Báo cáo tổng hợp, phân tích đọc CSDL báo cáo, không đọc CSDL giao dịch","DL02"],
-    ["NT08","Đăng nhập một lần","Ứng dụng của người dùng nội bộ và lực lượng bán đăng nhập qua SSO","TH01"],
+    ["NT08","Đăng nhập một lần","Ứng dụng của người dùng nội bộ và Người bán đăng nhập qua SSO","TH01"],
     ["NT09","Đối tác vào qua OpenAPI","Đối tác, kênh số gọi OpenAPI ở vùng Internet, giới hạn theo IP; không nối vào hệ thống nội bộ","TH03"]];
-  return `<p class="lead">Chín nguyên tắc mọi hệ thống phải tuân theo.</p><div class="grid g3">${P.map(p=>`<div class="card pr"><div class="pc">${p[0]}</div><h3>${esc(p[1])}</h3><p>${esc(p[2])}</p><div class="ap">Áp dụng: ${L(p[3])}</div></div>`).join("")}</div>`;
+  return `<p class="lead">Chín nguyên tắc mọi hệ thống phải tuân theo.</p><div class="grid g3">${P.map(p=>`<div class="card pr"><div class="pc">${p[0]}</div><h3>${esc(p[1])}</h3><p>${esc(p[2])}</p></div>`).join("")}</div>`;
 }},
 { id:"business", num:"4", group:"Nội dung", title:"Kiến trúc nghiệp vụ", render(){
   const CAP=[
-    ["Sản phẩm",[["Điều kiện, điều khoản, quy tắc chương trình bảo hiểm; biểu phí","TB05 CMS, NV01"],["Danh mục xe","TB05 CMS, NG14 AICycle"]]],
+    ["Sản phẩm",[["Điều kiện, điều khoản, quy tắc chương trình bảo hiểm; biểu phí","TB05 CMS, NV01"],["Danh mục xe, giá xe","TB05 CMS, NG14 AICycle"]]],
     ["Phân phối",[["Bán tại quầy ngân hàng","TB13, TB14, TB15, TH04, TH05"],["Bán qua đại lý, cán bộ, ngân hàng B2B","TB16 Ctien, TB17 Sale"],["Bán trực tuyến cho khách hàng","TB20, TB21, TH03"],["Bán, nhúng qua đối tác","TH03"]]],
     ["Khai thác, phát hành",[["Nhập, kiểm soát hợp đồng; cấp GCN","TB01, TB04 QLHSKT, NV01, NV02"],["Ký số GCN, chứng từ","NV08, NV09, TH08, TH09, HT01"]]],
     ["Thu phí, thanh toán",[["Thu phí qua ngân hàng, thu hộ","TH05, NV10, TH02, NG01"],["Thanh toán trực tuyến","TB22, NG04, NG05"],["Đối soát trung gian thanh toán","NV01, NG04"]]],
@@ -515,7 +514,7 @@ const SECTIONS = [
     ["Khách hàng",[["Quản lý khách hàng, eKYC","TB06 CRM, TH07"],["Tra cứu hợp đồng, GCN","TB19, TB21"],["Thông báo, chăm sóc qua SMS, Zalo, email","NV03, NV04, TH02, NG08–NG10"],["Quà tặng, voucher","TH02, NG11"]]],
     ["Báo cáo, phân tích",[["Báo cáo nghiệp vụ","TB10, TH06"],["Báo cáo banca hai chiều với Agribank","TB18 BC2C"],["Dữ liệu phí bù FTP cho Agribank","NV01, NG02"],["Phân tích số liệu","TB25 Power BI"]]],
     ["Hỗ trợ, quản trị",[["Trình, duyệt yêu cầu nghiệp vụ","TB03 QuyTrinh"],["Hỗ trợ người dùng","TB08 YeuCau"],["Văn phòng điện tử, quản lý công việc","TB12, NG13"],["Giám sát quy trình tự động","TB11 Dashboard WF"],["Nhân sự, tiền lương","NG12 MISA"]]]];
-  const MOD=[["Bảo hiểm gốc — hợp đồng, bồi thường, banca, GCN","BH_ · PBH_",559,1396],["Hạ tầng dùng chung — quyền, hàng đợi, email, SMS, quy trình tự động","HT_ · PHT_",61,60],["Tái bảo hiểm","TBH_ · PTBH_",59,147],["Kế toán tổng hợp, ký số chứng từ","KT_ · PKT_ · BKT_",47,190],["Khách hàng","KH_ · PKH_",32,90],["Hợp đồng dùng chung","HD_ · PHD_",28,94],["Kế toán vật tư","VT_ · PVT_",25,80],["Báo cáo tổng hợp","BC_ · PBC_",21,73]];
+  const MOD=[["Bảo hiểm gốc — hợp đồng, bồi thường, banca, GCN","BH_ · PBH_",559,1396],["Hạ tầng dùng chung — quyền, hàng đợi, email, SMS, quy trình tự động","HT_ · PHT_",61,60],["Tái bảo hiểm","TBH_ · PTBH_",59,147],["Kế toán tổng hợp, ký số chứng từ","KT_ · PKT_ · BKT_",47,190],["Khách hàng","KH_ · PKH_",32,90],["Hợp đồng dùng chung","HD_ · PHD_",28,94],["Báo cáo tổng hợp","BC_ · PBC_",21,73]];
   const bar=(v,m)=>`<div class="bar"><div class="t"><i style="width:${v/m*100}%"></i></div><span>≈${v.toLocaleString("vi-VN")}</span></div>`;
   return `
   ${card("4.1 Bản đồ năng lực",`<div class="grid g4">${CAP.map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${esc(i[0])}<div>${L(i[1])}</div></div>`).join("")}</div>`).join("")}</div>`,"12 nhóm")}
@@ -544,13 +543,13 @@ const SECTIONS = [
   <div class="grid g2">
   ${card("5.2 Ứng dụng theo nhóm người dùng",[
     ["Nội bộ ABIC",["TB01","TB02","TB03","TB04","TB05","TB06","TB07","TB08","TB09","TB10","TB11","TB12"]],
-    ["Lực lượng bán",["TB13","TB14","TB15","TB16","TB17"]],["Đầu mối Agribank",["TB18"]],
+    ["Người bán",["TB13","TB14","TB15","TB16","TB17"]],["Đầu mối Agribank",["TB18"]],
     ["Khách hàng",["TB19","TB20","TB21","TB22","TB23"]],["Dùng chung",["TB24","TB25"]]
   ].map(([g,c])=>`<div style="margin-bottom:12px"><h3>${g} <span style="color:var(--ink-3);font-weight:400">· ${c.length}</span></h3><div class="lc" style="display:flex;flex-wrap:wrap;gap:6px">${c.map(node).join("")}</div></div>`).join(""))}
   ${card("5.4 Nền tảng ứng dụng",T(["Nhóm","Công nghệ"],[
     ["Desktop","VB6 client-server; OO4O; Crystal Reports 9"],
     ["Web",".NET trên IIS. Web bán hàng trực tuyến và Home page do đối tác phát triển, bàn giao trọn gói. Dashboard WF là HTML/JS tĩnh theo bộ giao diện UIKit"],
-    ["API",".NET trên IIS; ClosedAPI .NET 8, REST/JSON"],["Dịch vụ nền",".NET, Windows Service; KtKySo .NET 8"],
+    ["API",".NET trên IIS; ClosedAPI .NET 8, REST/JSON"],["Dịch vụ nền",".NET, Windows Service; .NET 8"],
     ["Truy cập CSDL từ .NET","Thư viện dùng chung KnOracle (AIS.ThuVien.Core) gọi thủ tục Oracle"],
     ["Nghiệp vụ lõi","Oracle PL/SQL; engine WF dùng Oracle AQ"],["Định danh","IdentityServer, OIDC"]],{codeCol:false}))}
   </div>`;}},
@@ -567,9 +566,9 @@ const SECTIONS = [
   <h2 style="margin-top:22px">6.2 Cổng tích hợp</h2>
   <div class="grid g4">
     ${card("","<h3>"+L("TH02")+" ClosedAPI</h3>"+ul(["Cổng dữ liệu nội bộ: REST/JSON; gọi thủ tục KT_ABIC qua thư viện KnOracle.","Xác thực client: APIKey cấp theo thiết bị, kiểm cùng địa chỉ IP, đối tác, nhóm quyền trong CSDL. Người dùng đăng nhập nhận phiên SessionID.","Nhóm chức năng: bảo hiểm, bán hàng, banca, báo cáo, CMS, kho file, ký số, quy trình tự động, tiện ích (email, SMS, OCR, tìm kiếm), tích hợp ngoài.","Kiêm tích hợp ra ngoài: Agribank (thu hộ qua QR, OAuth2), Zalo ZNS, URBOX, AICycle, Elastic."]))}
-    ${card("","<h3>"+L("TH03")+" OpenAPI</h3>"+ul(["Cổng cho đối tác và kênh số ở vùng Internet, giới hạn theo IP đối tác.","Chuyển tiếp webhook Base sang ClosedAPI.","Phần truy cập CSDL còn lại đang chuyển sang ClosedAPI."]))}
+    ${card("","<h3>"+L("TH03")+" OpenAPI</h3>"+ul(["Cổng cho đối tác và kênh số ở vùng Internet, giới hạn theo IP đối tác.","Chuyển tiếp webhook sang ClosedAPI.","Phần truy cập CSDL còn lại đang chuyển sang ClosedAPI."]))}
     ${card("","<h3>"+L("TH04")+" "+L("TH05")+" API kênh Agribank</h3>"+ul(["Đặt trên máy chủ API tại vùng ngoài DC Agribank.","OpenAPI Banca, NHNo API gọi thủ tục API_BANCA: tạo đơn, xác nhận thanh toán, tra cứu hợp đồng.","NHNo API trao đổi với hệ thống thu phí Agribank bằng SOAP, ISO 8583.","Trung tâm quản lý dữ liệu Agribank gọi API hằng ngày lấy dữ liệu phí bù FTP."]))}
-    ${card("","<h3>"+L("TH01")+" SSO</h3>"+ul(["IdentityServer, OIDC; đăng nhập một lần cho ứng dụng của người dùng nội bộ và lực lượng bán, gồm cả VB6."]))}
+    ${card("","<h3>"+L("TH01")+" SSO</h3>"+ul(["IdentityServer, OIDC; đăng nhập một lần cho ứng dụng của người dùng nội bộ và Người bán, gồm cả VB6."]))}
   </div>
   ${card("6.3 Tích hợp với hệ thống ngoài",T(["Hệ thống","Nghiệp vụ","Cơ chế","Thành phần ABIC","Kết nối"],[
     ["NG01 Agribank — thu phí","Thu phí, thu hộ Bảo an chủ thẻ, thu hộ qua QR","SOAP, ISO 8583 qua NHNo API; REST, OAuth2 qua ClosedAPI; BACT Service","TH05, TH02, NV10","KN25, KN27, KN48"],
@@ -585,20 +584,9 @@ const SECTIONS = [
     ["NG13 Base","Quản lý công việc","Webhook qua OpenAPI → ClosedAPI","TH03, TH02","KN26"],
     ["NG14 AICycle","Danh mục xe","ClosedAPI đồng bộ","TH02","KN29"],
     ["NG12 MISA","Nhân sự, tiền lương","Không tích hợp","—","—"]],{codeCol:false}))}
-  <div class="grid g2">
-    ${card("6.4 Luồng tiêu biểu · Ký số chứng từ kế toán",`<ol class="flow">${[
-      "Nghiệp vụ ghi chứng từ cần ký vào bảng chờ KT_KY, KT_KY_FILE.",
-      "KtKySo quét bảng chờ 10 giây một lần, chỉ ký trong khung giờ đêm.",
-      "KtKySo gọi ClosedAPI dựng PDF chứng từ và lưu vào kho file.",
-      "KtKySo gọi BancaAPI ký file; BancaAPI ký bằng HSM với chứng thư Viettel CA.",
-      "BancaAPI trả kết quả vào thủ tục PKT_KY; chứng từ chuyển trạng thái đã ký."].map(s=>`<li>${L(s)}</li>`).join("")}</ol>`)}
-    ${card("6.4 Luồng tiêu biểu · Thông báo khách hàng",`<ol class="flow">${[
-      "Nghiệp vụ ghi tin vào bảng chờ: SMS (BH_SMS_MT), email (HT_EMAIL), Zalo (W_ABIC.BH_MSG).",
-      "SMS Service, Email Service, ClosedAPI quét tin chờ, gửi qua Viettel SMS, Google Workspace, Zalo ZNS.",
-      "Kết quả gửi được ghi lại bằng thủ tục. Tin nhắn đến theo cú pháp (tra cứu, hủy) gọi thủ tục xử lý ngay."].map(s=>`<li>${L(s)}</li>`).join("")}</ol>`)}
-  </div>`;}},
+`;}},
 { id:"data", num:"7", group:"Nội dung", title:"Kiến trúc dữ liệu", render(){ return `
-  ${card("7.1 Kho dữ liệu",T(["Mã","Kho","Nội dung","Công nghệ"],[
+  ${card("7.1 Cơ sở dữ liệu",T(["Mã","Kho","Nội dung","Công nghệ"],[
     ["DL01","CSDL giao dịch","KT_ABIC: nghiệp vụ lõi. W_ABIC: dữ liệu ứng dụng web, bảng trung gian tích hợp. LOGCTR: log","Oracle 19c RAC"],
     ["DL02","CSDL báo cáo","R_ABIC: kho báo cáo. W_ABIC: bản sao cho BC2C","Oracle 19c, GoldenGate"],
     ["DL03","CSDL dự phòng","Bản dự phòng của DL01, DL02","Oracle Data Guard"],
@@ -616,35 +604,30 @@ const SECTIONS = [
     ["Khách hàng","Phân hệ khách hàng KT_ABIC (KH_); CRM"],["Sản phẩm: điều kiện, điều khoản, quy tắc","CMS"],
     ["Danh mục xe","CMS, đồng bộ từ AICycle"],["Người dùng, quyền","Phân hệ hạ tầng KT_ABIC (HT_, PHT_NSD); SSO"],
     ["Định nghĩa quy trình tự động","Engine WF (bảng QT_*)"]],{codeCol:false}))}
-  ${card("7.5 Log",T(["Loại","Nơi lưu"],[["Log job, lỗi, gọi API của PL/SQL","LOGCTR, trong DL01"],["Log ứng dụng, máy chủ","Elastic (DL05)"]],{codeCol:false}))}
+  ${card("7.4 Log",T(["Loại","Nơi lưu"],[["Log job, lỗi, gọi API của PL/SQL","LOGCTR, trong DL01"],["Log ứng dụng, máy chủ","Elastic (DL05)"]],{codeCol:false}))}
   </div></div>
-  ${card("7.4 Bảng trung gian tích hợp",T(["Bảng","Nội dung","Thành phần xử lý"],[
-    ["BH_SMS_MT, BH_SMS_MO","Tin nhắn đi, đến","NV03"],["HT_EMAIL; W_ABIC.HT_EMAIL_ATTACHMENT","Email, tệp đính kèm","NV04"],
-    ["W_ABIC.BH_MSG","Tin Zalo","TH02"],["BH_HDDT","Hóa đơn điện tử","NV06"],["KT_KY, KT_KY_FILE","Chứng từ chờ ký","NV08, NV09"],
-    ["W_ABIC.KHO, KHO_FILE","Chỉ mục file","NV07"],["W_ABIC.BH_DL_THUONG_GD_TTRANG","Giao dịch quà tặng","TH02"],
-    ["W_ABIC.KH_TGTT_STG_VNPAY, KH_TGTT_LSGD","Giao dịch trung gian thanh toán","NV01"],["Hàng đợi AQ PHT_MQ","Bước quy trình tự động","NV02"]]))}
   `;}},
 { id:"technology", num:"8", group:"Nội dung", title:"Kiến trúc công nghệ", render(){
   const SRV=[[1,"Server Banca","Đại lý · Internet","TB14","5"],[2,"Server Banca DR","Đại lý · Intranet, DC Agribank","TB13, TB15","5"],[3,"Server API DR","Đại lý · Intranet, DC Agribank","TH04, TH05, NV10","4"],[4,"Server Web chung","Internet","TB16, TB17, TB18, TB19, TB24","1–4"],[5,"Server Web Internet","Internet","TB12","3"],[6,"Server Web Intranet","Nội bộ · VPN","TB03–TB08","1–3"],[7,"Server File","Nội bộ · Intranet","DL04","5"],[8,"Server HDDT","Nội bộ · VPN","TB09","5"],[9,"Server Payment","Cộng đồng · Internet","TB22","5"],[10,"Server SSO","Internet","TH01","5"],[11,"Server trực tuyến","Cộng đồng · Internet","TB20","3"],[12,"Server Homepage","Cộng đồng · Internet","TB23","5"],[13,"Server Báo cáo","Nội bộ · Intranet","TB10, TH06","4"],[14,"Server ký số","Nội bộ · Intranet","TH08, TH09, NV08","4–5"],[15,"Server OpenAPI","Đối tác · Internet","TH03","5"],[16,"Server ClosedAPI","Nội bộ · Intranet","TH02","5"],[17,"Server API Intranet","Nội bộ · Intranet","TH07","3"],[18,"Server Service","Nội bộ · Intranet","NV03, NV04, NV06, NV07",""]];
-  const ZONES=[["Đại lý","Kênh banca, lực lượng bán","Internet; Intranet qua mạng riêng Agribank, máy chủ đặt tại vùng ngoài DC Agribank"],["Cộng đồng","Khách hàng","Internet"],["Đối tác","Hệ thống đối tác","Internet, whitelist IP"],["Nội bộ","Người dùng nội bộ, API nội bộ, dịch vụ nền","Intranet; VPN khi ở ngoài văn phòng"],["CSDL","CSDL, nghiệp vụ lõi","Tách riêng khỏi các vùng khác"]];
+  const ZONES=[["Đại lý","Kênh banca, Người bán","Internet; Intranet qua mạng riêng Agribank, máy chủ đặt tại vùng ngoài DC Agribank"],["Cộng đồng","Khách hàng","Internet"],["Đối tác","Hệ thống đối tác","Internet, whitelist IP"],["Nội bộ","Người dùng nội bộ, API nội bộ, dịch vụ nền","Intranet; VPN khi ở ngoài văn phòng"],["CSDL","CSDL, nghiệp vụ lõi","Tách riêng khỏi các vùng khác"]];
   const zoneOf = z => z.startsWith("Đại lý")?"Đại lý":z.startsWith("Cộng đồng")?"Cộng đồng":z.startsWith("Đối tác")?"Đối tác":z.startsWith("Nội bộ")?"Nội bộ":"Internet (chung)";
   const grouped = {}; SRV.forEach(s=>{(grouped[zoneOf(s[2])]=grouped[zoneOf(s[2])]||[]).push(s)});
   return `
   <div class="grid z5">${ZONES.map(z=>`<div class="card"><h3 style="color:var(--brand)">Vùng ${z[0]}</h3><div style="font-size:12.5px"><b>Đối tượng:</b> ${esc(z[1])}</div><div style="font-size:12.5px;color:var(--ink-2);margin-top:4px"><b>Đường vào:</b> ${esc(z[2])}</div></div>`).join("")}</div>
-  ${card("8.2 Máy chủ ứng dụng theo vùng",`<div class="grid g3">${Object.entries(grouped).map(([z,list])=>`<div class="zone"><h3>${z}<span class="b mute">${list.length} máy chủ</span></h3>${list.map(s=>`<div class="srv"><div><b>#${s[0]} ${esc(s[1])}</b><div style="color:var(--ink-3);font-size:11.5px">${esc(s[2])}</div><div style="margin-top:3px">${L(s[3])}</div></div><div style="white-space:nowrap">${lvl(s[4])}</div></div>`).join("")}</div>`).join("")}</div>`,"Áp dụng từ 30/10/2026")}
+  ${card("8.2 Máy chủ ứng dụng theo vùng",`<div class="grid g3">${Object.entries(grouped).map(([z,list])=>`<div class="zone"><h3>${z}<span class="b mute">${list.length} máy chủ</span></h3>${list.map(s=>`<div class="srv"><div><b>#${s[0]} ${esc(s[1])}</b><div style="color:var(--ink-3);font-size:11.5px">${esc(s[2])}</div><div style="margin-top:3px">${L(s[3])}</div></div><div style="white-space:nowrap">${lvl(s[4])}</div></div>`).join("")}</div>`).join("")}</div>`)}
   <div class="grid g2">
   ${card("8.3 CSDL",T(["CSDL","Vai trò","Công nghệ"],[["tcdn","DL01 CSDL giao dịch","Oracle 19c RAC"],["tcdnrp","DL02 CSDL báo cáo","Oracle 19c, GoldenGate"],["tcdndr, tcdnrpdr","DL03 dự phòng của tcdn, tcdnrp","Oracle Data Guard"]]))}
   ${card("8.5 Môi trường",T(["Môi trường","Thành phần"],[["Production","Như mục 8.2, 8.3"],["Test, UAT","Máy chủ test; CSDL test TCDN_CV"]]))}
-  ${card("8.4 Nền tảng",T(["Thành phần","Công nghệ"],[["Máy chủ ứng dụng","Windows Server, IIS; ảo hóa VMware"],["Ứng dụng .NET","Nhiều phiên bản .NET; chuẩn cho ứng dụng mới và nâng cấp: .NET 8"],["Dịch vụ nền","Windows Service, Task Scheduler; chuẩn mới: Windows Service với gMSA"],["CSDL","Oracle 19c"],["Tìm kiếm, log","Elasticsearch"],["Mã nguồn, triển khai","GitLab; GitLab CI/CD"],["Định danh, truy cập","IdentityServer (OIDC); VPN"]],{codeCol:false}))}
+  ${card("8.4 Nền tảng",T(["Thành phần","Công nghệ"],[["Máy chủ ứng dụng","Windows Server, IIS; ảo hóa VMware"],["Ứng dụng .NET","Nhiều phiên bản .NET; chuẩn cho ứng dụng mới và nâng cấp: .NET 8"],["Dịch vụ nền","Windows Service, Task Scheduler; chuẩn mới: Windows Service với gMSA"],["CSDL","Oracle 19c"],["Tìm kiếm, log","Elasticsearch"],["Mã nguồn, triển khai","GitLab; GitLab CI/CD"],["Định danh, truy cập","IdentityServer (OIDC); AD; VPN"]],{codeCol:false}))}
   ${card("8.6 Vận hành",T(["Hoạt động","Công cụ"],[["Giám sát quy trình tự động","Dashboard WF"],["Log","LOGCTR; Elastic"],["Triển khai","GitLab CI/CD; publish thủ công với ứng dụng chưa chuyển"],["Tác vụ định kỳ","Windows Service; Task Scheduler; job Oracle"]],{codeCol:false}))}
   </div>`;
 }},
 { id:"security", num:"9", group:"Nội dung", title:"An toàn thông tin và định danh", render(){
-  const S=[["Mạng","Phân vùng theo đối tượng sử dụng; vùng CSDL tách riêng","Chương 8"],["Truy cập từ xa","VPN bắt buộc với ứng dụng nội bộ khi ở ngoài văn phòng","HT02"],["Đối tác","Whitelist IP đối tác tại tường lửa và API","TH03"],["CSDL","Tường lửa chỉ cho ClosedAPI vào cổng CSDL, áp dụng theo từng ứng dụng đã chuyển","TH02"],["Định danh người dùng","SSO, OIDC cho ứng dụng của người dùng nội bộ và lực lượng bán","TH01"],["Xác thực API","APIKey theo thiết bị, kiểm cùng IP, đối tác, nhóm quyền trong CSDL; phiên đăng nhập","TH02"],["Ký số","Khóa lưu trong HSM do ABIC vận hành; chứng thư số Viettel CA","HT01, NG07"],["Tài khoản dịch vụ","gMSA cho dịch vụ nền","Chương 10"],["Nhật ký","LOGCTR; log tập trung Elastic","DL01, DL05"],["Dự phòng","Data Guard cho CSDL giao dịch và CSDL báo cáo","DL03"]];
+  const S=[["Mạng","Phân vùng theo đối tượng sử dụng; vùng CSDL tách riêng","Chương 8"],["Truy cập từ xa","VPN bắt buộc với ứng dụng nội bộ khi ở ngoài văn phòng","HT02"],["Đối tác","Whitelist IP đối tác tại tường lửa và API","TH03"],["CSDL","Tường lửa chỉ cho ClosedAPI vào cổng CSDL, áp dụng theo từng ứng dụng đã chuyển","TH02"],["Định danh người dùng","SSO, OIDC cho ứng dụng của người dùng nội bộ và Người bán","TH01"],["Xác thực API","APIKey theo thiết bị, kiểm cùng IP, đối tác, nhóm quyền trong CSDL; phiên đăng nhập","TH02"],["Ký số","Khóa lưu trong HSM do ABIC vận hành; chứng thư số Viettel CA","HT01, NG07"],["Tài khoản dịch vụ","gMSA cho dịch vụ nền","Chương 10"],["Nhật ký","LOGCTR; log tập trung Elastic","DL01, DL05"],["Dự phòng","Data Guard cho CSDL giao dịch và CSDL báo cáo","DL03"]];
   return `<p class="lead">Mười lớp bảo vệ đang áp dụng, từ mạng đến dữ liệu.</p><div class="grid g2">${S.map((s,i)=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start"><div style="flex:none;width:36px;height:36px;border-radius:10px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700">${i+1}</div><div><h3 style="margin:0 0 4px">${esc(s[0])}</h3><div style="color:var(--ink-2);font-size:13px">${esc(s[1])}</div><div style="margin-top:6px;font-size:12px;color:var(--ink-3)">Thành phần: ${L(s[2])}</div></div></div>`).join("")}</div>`;
 }},
 { id:"changes", num:"10", group:"Nội dung", title:"Thay đổi đang triển khai", render(){
-  const C=[["Di dời hạ tầng","35 ứng dụng sang 18 máy chủ theo vùng; chạy song song từ 01/10; chuyển đổi 15–30/10; đóng cổng Internet cũ, bắt buộc VPN, tắt máy chủ cũ","Đang triển khai","30/10/2026"],["Whitelist IP đối tác","Tường lửa và API cho OpenAPI","Đang triển khai","15/10/2026"],["Chuyển về ClosedAPI","QuyTrinh, HDDT, QLHSKT, Banca chuyển trước; ứng dụng, OpenAPI còn lại chuyển theo từng ứng dụng; ForSaleAPI, DataAPI gộp vào ClosedAPI; tường lửa chặn kết nối CSDL trực tiếp của từng ứng dụng đã chuyển","Đang triển khai","Nhóm đầu: 30/10/2026"],["SSO toàn bộ","Ứng dụng của người dùng nội bộ và lực lượng bán, kể cả VB6","Đang triển khai","10/2026"],["Hiện đại hóa vận hành",".NET 8; Windows Service với gMSA; GitLab CI/CD","Đang triển khai","Theo từng ứng dụng"],["Log tập trung","Log ứng dụng, máy chủ về Elastic","Đang triển khai",""],["Ký số chứng từ kế toán","KtKySo (NV09)","Đang triển khai",""],["Dashboard WF","Giám sát, xử lý quy trình tự động (TB11)","Đang xây dựng",""],["CRM","Quản lý khách hàng, eKYC (TB06)","Đang xây dựng",""],["Đối soát trung gian thanh toán","Đối soát giao dịch VNPAY với sổ phụ ngân hàng, hạch toán (KN50)","Đang triển khai",""],["Chuyển xử lý lô sang engine WF","Xử lý lô cũ (PBH_HTTD) chuyển dần sang quy trình tự động","Đang triển khai",""],["Tái bảo hiểm tự động","Quy trình tái bảo hiểm trên engine WF","Đang xây dựng",""],["Webview Banca Agri","Màn hình cấp đơn nhúng vào web banca Agribank (TB15)","Thí điểm",""]];
+  const C=[["Di dời hạ tầng","35 ứng dụng sang 18 máy chủ theo vùng; chạy song song từ 01/10; chuyển đổi 15–30/10; đóng cổng Internet cũ, bắt buộc VPN, tắt máy chủ cũ","Đang triển khai","30/10/2026"],["Whitelist IP đối tác","Tường lửa và API cho OpenAPI","Đang triển khai","15/10/2026"],["Chuyển về ClosedAPI","QuyTrinh, HDDT, QLHSKT, Banca chuyển trước; ứng dụng, OpenAPI còn lại chuyển theo từng ứng dụng; ForSaleAPI, DataAPI gộp vào ClosedAPI; tường lửa chặn kết nối CSDL trực tiếp của từng ứng dụng đã chuyển","Đang triển khai","Nhóm đầu: 30/10/2026"],["SSO toàn bộ","Ứng dụng của người dùng nội bộ và Người bán, kể cả VB6","Đang triển khai","10/2026"],["Hiện đại hóa vận hành",".NET 8; Windows Service với gMSA; GitLab CI/CD","Đang triển khai","Theo từng ứng dụng"],["Log tập trung","Log ứng dụng, máy chủ về Elastic","Đang triển khai",""],["Dashboard WF","Giám sát, xử lý quy trình tự động (TB11)","Đang xây dựng",""],["CRM","Quản lý khách hàng, eKYC (TB06)","Đang xây dựng",""],["Đối soát trung gian thanh toán","Đối soát giao dịch VNPAY với sổ phụ ngân hàng, hạch toán (KN50)","Đang triển khai",""],["Tái bảo hiểm tự động","Quy trình tái bảo hiểm trên engine WF","Đang xây dựng",""],["Webview Banca Agri","Màn hình cấp đơn nhúng vào web banca Agribank (TB15)","Thí điểm",""]];
   const cnt=s=>C.filter(c=>c[2]===s).length;
   return `
   <div class="grid g4 kpi-row">${[[C.length,"Hạng mục thay đổi"],[cnt("Đang triển khai"),"Đang triển khai"],[cnt("Đang xây dựng"),"Đang xây dựng"],[cnt("Thí điểm"),"Thí điểm"]].map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("")}</div>
