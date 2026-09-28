@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiến trúc CNTT ABIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f5; --panel:#ffffff; --panel-2:#f8faf9; --ink:#14201a; --ink-2:#4b5a52; --ink-3:#7c8a82;
+  --line:#e2e8e4; --brand:#0a6e3c; --brand-2:#0d8a4b; --brand-soft:#e3f2ea; --accent:#c8102e;
+  --side:#0b2e1e; --side-ink:#cfe3d8; --side-ink-2:#8fb3a0; --side-hover:#12402b; --side-active:#1a5a3b;
+  --ok:#0d8a4b; --ok-bg:#e3f4ea; --warn:#a15c00; --warn-bg:#fff2dc; --info:#1f5fae; --info-bg:#e5effb;
+  --pilot:#7a3fb0; --pilot-bg:#f1e8fa; --mute:#5d6b63; --mute-bg:#eef1ef;
+  --shadow:0 1px 2px rgba(10,40,25,.06),0 4px 16px rgba(10,40,25,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1512; --panel:#151f1a; --panel-2:#1a2620; --ink:#e6efe9; --ink-2:#aebdb4; --ink-3:#7f9187;
+    --line:#26352d; --brand:#3fbf7a; --brand-2:#5bd293; --brand-soft:#173427; --accent:#ff6b7f;
+    --side:#08110d; --side-ink:#cfe3d8; --side-ink-2:#7fa18e; --side-hover:#11231a; --side-active:#1a3a2a;
+    --ok:#5bd293; --ok-bg:#173427; --warn:#f0b35a; --warn-bg:#3a2a10; --info:#7fb2f0; --info-bg:#16283f;
+    --pilot:#c49bf0; --pilot-bg:#2b1d3b; --mute:#a3b1a9; --mute-bg:#22302a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1512; --panel:#151f1a; --panel-2:#1a2620; --ink:#e6efe9; --ink-2:#aebdb4; --ink-3:#7f9187;
+  --line:#26352d; --brand:#3fbf7a; --brand-2:#5bd293; --brand-soft:#173427; --accent:#ff6b7f;
+  --side:#08110d; --side-ink:#cfe3d8; --side-ink-2:#7fa18e; --side-hover:#11231a; --side-active:#1a3a2a;
+  --ok:#5bd293; --ok-bg:#173427; --warn:#f0b35a; --warn-bg:#3a2a10; --info:#7fb2f0; --info-bg:#16283f;
+  --pilot:#c49bf0; --pilot-bg:#2b1d3b; --mute:#a3b1a9; --mute-bg:#22302a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.55 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.app{display:grid;grid-template-columns:272px 1fr;height:100vh}
+/* Sidebar */
+.side{background:var(--side);color:var(--side-ink);display:flex;flex-direction:column;min-height:0}
+.brand{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:#fff}
+.brand .logo i{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#0d8a4b,#0a6e3c);display:grid;place-items:center;font-style:normal;font-size:13px;letter-spacing:.5px}
+.brand small{display:block;color:var(--side-ink-2);font-size:12px;margin-top:6px}
+.nav{flex:1;overflow:auto;padding:10px 10px 16px}
+.nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--side-ink-2);padding:14px 12px 6px}
+.nav button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--side-ink);font-size:13.5px}
+.nav button:hover{background:var(--side-hover)}
+.nav button:focus-visible{outline:2px solid var(--brand-2)}
+.nav button.active{background:var(--side-active);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #3fbf7a}
+.nav .num{flex:none;width:24px;height:24px;border-radius:6px;display:grid;place-items:center;font-size:11.5px;font-weight:600;background:rgba(255,255,255,.07);color:var(--side-ink)}
+.nav button.active .num{background:#3fbf7a;color:#08110d}
+.side-foot{padding:12px 20px;border-top:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--side-ink-2);display:flex;justify-content:space-between;align-items:center}
+.side-foot button{all:unset;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.15);color:var(--side-ink)}
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.top{display:flex;align-items:center;gap:12px;padding:14px 28px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top .crumb{color:var(--ink-3);font-size:12.5px}
+.top h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.top .spacer{flex:1}
+.top .pager{display:flex;gap:6px;align-items:center;color:var(--ink-3);font-size:12.5px}
+.top .pager button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);background:var(--panel)}
+.top .pager button:hover{border-color:var(--brand);color:var(--brand)}
+.menu-btn{all:unset;display:none;cursor:pointer;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);place-items:center}
+.content{flex:1;overflow:auto;padding:24px 28px 48px}
+.content > section{max-width:1240px;margin:0 auto;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.lead{color:var(--ink-2);font-size:14.5px;max-width:880px;margin:0 0 20px}
+h2{font-size:15px;margin:0 0 12px;font-weight:700;display:flex;align-items:center;gap:8px}
+h2 .tag{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:2px 8px;border-radius:99px}
+h3{font-size:13.5px;margin:0 0 8px;font-weight:600}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.content > section > * + *, .card-stack > * + *{margin-top:16px}
+.kpi .v{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--brand);line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .l{color:var(--ink-2);font-size:12.5px;margin-top:4px}
+.kpi .s{color:var(--ink-3);font-size:11.5px;margin-top:2px}
+ul.clean{margin:0;padding-left:18px}
+ul.clean li{margin:4px 0}
+ul.clean li::marker{color:var(--brand)}
+/* tables */
+.tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--panel-2);font-weight:600;color:var(--ink-2);font-size:12px;white-space:nowrap;position:sticky;top:0;z-index:1}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--panel-2)}
+td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+/* chips & badges */
+.c{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:5px;background:var(--brand-soft);color:var(--brand);cursor:pointer;white-space:nowrap;margin:1px 0}
+.c:hover{outline:1px solid var(--brand)}
+.b{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.b.ok{background:var(--ok-bg);color:var(--ok)}
+.b.warn{background:var(--warn-bg);color:var(--warn)}
+.b.info{background:var(--info-bg);color:var(--info)}
+.b.pilot{background:var(--pilot-bg);color:var(--pilot)}
+.b.mute{background:var(--mute-bg);color:var(--mute)}
+.lvl{display:inline-flex;gap:2px;vertical-align:middle}
+.lvl i{width:6px;height:12px;border-radius:2px;background:var(--line)}
+.lvl i.on{background:var(--brand)}
+/* layered diagram */
+.layers{display:flex;flex-direction:column;gap:8px}
+.layer{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:stretch}
+.layer .ln{background:var(--brand);color:#fff;border-radius:8px;padding:10px 12px;font-weight:600;font-size:12.5px;display:flex;flex-direction:column;justify-content:center}
+.layer .ln small{font-weight:400;opacity:.85;font-size:11px}
+.layer .lc{background:var(--panel-2);border:1px dashed var(--line);border-radius:8px;padding:8px;display:flex;flex-wrap:wrap;gap:6px}
+.node{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer}
+.node b{color:var(--brand);font-weight:600;margin-right:4px}
+.node:hover{border-color:var(--brand)}
+.node.dim{opacity:.6;border-style:dashed}
+/* principles */
+.pr{display:flex;flex-direction:column;gap:8px}
+.pr .pc{font-size:11.5px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.pr h3{font-size:14.5px;margin:0}
+.pr p{margin:0;color:var(--ink-2);font-size:13px}
+.pr .ap{margin-top:auto;font-size:12px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:8px}
+/* flows */
+.flow{counter-reset:s;display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}
+.flow li{position:relative;padding:0 0 14px 38px;color:var(--ink-2)}
+.flow li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.flow li::after{content:"";position:absolute;left:12px;top:28px;bottom:2px;width:2px;background:var(--line)}
+.flow li:last-child::after{display:none}
+.flow li:last-child{padding-bottom:0}
+/* bars */
+.bar{display:grid;grid-template-columns:1fr 70px;align-items:center;gap:8px;font-size:12px}
+.bar .t{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar .t i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.bar span{text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
+/* capability map */
+.cap h3{color:var(--brand);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.cap .it{padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.cap .it:first-of-type{border-top:0}
+.cap .it div{margin-top:3px}
+/* zones */
+.zone{border-radius:10px;padding:14px;border:1px solid var(--line);background:var(--panel-2)}
+.zone h3{display:flex;justify-content:space-between;align-items:center}
+.zone .srv{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:12.5px}
+/* timeline */
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:6px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.tl .ev{position:relative;padding-bottom:16px}
+.tl .ev::before{content:"";position:absolute;left:-21px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--panel);border:3px solid var(--brand)}
+.tl .ev .d{font-size:12px;color:var(--brand);font-weight:700}
+.tl .ev .n{font-weight:600}
+.tl .ev .x{color:var(--ink-2);font-size:12.5px}
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.filters input{flex:1;min-width:200px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit}
+.filters input:focus{outline:2px solid var(--brand);outline-offset:-1px}
+.pill{all:unset;cursor:pointer;padding:6px 12px;border-radius:99px;border:1px solid var(--line);font-size:12.5px;color:var(--ink-2);background:var(--panel)}
+.pill.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.count{color:var(--ink-3);font-size:12px;margin-left:auto}
+.note{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+.callout{border-left:3px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px}
+/* tooltip */
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:320px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
+#tip b{display:block;margin-bottom:2px}
+.scrim{display:none}
+.k6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.z5{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:1100px){.k6,.z5{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:280px;z-index:40;transform:translateX(-100%);transition:transform .2s}
+  .side.open{transform:none}
+  .scrim.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30}
+  .menu-btn{display:grid}
+  .top{padding:12px 16px}
+  .top .pager span{display:none}
+  .content{padding:16px 16px 40px}
+  .g2,.g3,.g4{grid-template-columns:minmax(0,1fr)}
+  .layer{grid-template-columns:1fr}
+  .kpi-row.g4,.k6{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .z5{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand">
+      <div class="logo"><i>ABIC</i>Kiến trúc CNTT</div>
+      <small>Hệ thống thông tin đang vận hành · Cập nhật 25/09/2026</small>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot"><span>← → để chuyển mục</span><button id="theme" type="button">Giao diện</button></div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main class="main">
+    <header class="top">
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Mở menu">☰</button>
+      <div>
+        <div class="crumb" id="crumb"></div>
+        <h1 id="title"></h1>
+      </div>
+      <div class="spacer"></div>
+      <div class="pager"><span id="pos"></span><button id="prev" type="button" aria-label="Mục trước">‹</button><button id="next" type="button" aria-label="Mục sau">›</button></div>
+    </header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+<div id="tip"></div>
+
+<script>
+/* ========== DỮ LIỆU THÀNH PHẦN (Phụ lục A) ========== */
+const COMP = [
+ // Người sử dụng
+ ["ND01","Nội bộ ABIC","Người sử dụng","Tác nhân","","","","","Cán bộ hội sở, chi nhánh"],
+ ["ND02","Lực lượng bán","Người sử dụng","Tác nhân","","","","","Cán bộ Agribank, đại lý, cán bộ bán hàng ABIC"],
+ ["ND03","Khách hàng","Người sử dụng","Tác nhân","","","","","Cá nhân, doanh nghiệp mua bảo hiểm"],
+ ["ND04","Đầu mối Agribank","Người sử dụng","Tác nhân","","","","","Đầu mối các cấp của Agribank xem, đối chiếu báo cáo banca"],
+ ["ND05","Hệ thống đối tác","Người sử dụng","Tác nhân","","","","","Hệ thống của đối tác gọi API để bán, nhúng bảo hiểm"],
+ // Lớp trình bày
+ ["TB01","Nghiệp vụ bảo hiểm (VB6)","Lớp trình bày","Desktop","Nội bộ · Intranet","VB6, OO4O, Crystal Reports 9","","Vận hành","Nhập, quản lý hợp đồng, bồi thường, đồng và tái bảo hiểm, in ấn; nối thẳng CSDL"],
+ ["TB02","Tài chính kế toán (VB6)","Lớp trình bày","Desktop","Nội bộ · Intranet","VB6","","Vận hành","Tiền, công nợ, thuế, tài sản, công cụ dụng cụ, thu chi nội bộ, kết nối nghiệp vụ bảo hiểm; nối thẳng CSDL"],
+ ["TB03","QuyTrinh","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Vận hành","Trình, duyệt các yêu cầu nghiệp vụ theo mô hình workflow"],
+ ["TB04","QLHSKT","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Vận hành","Quản lý hồ sơ khai thác"],
+ ["TB05","CMS","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Vận hành","Cập nhật dữ liệu chủ: điều kiện, điều khoản, quy tắc chương trình bảo hiểm"],
+ ["TB06","CRM","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Đang xây dựng","Quản lý khách hàng; eKYC triển khai một phần"],
+ ["TB07","QLTG","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Vận hành","Quản lý hợp đồng tiền gửi (kênh đầu tư): tính lãi, chuyển kế toán"],
+ ["TB08","YeuCau","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","1–3","Vận hành","Quản lý yêu cầu hỗ trợ người dùng; cập nhật dữ liệu khi được duyệt"],
+ ["TB09","HDDT","Lớp trình bày","Web","Nội bộ · VPN",".NET, IIS","5","Vận hành","Quản lý hóa đơn điện tử"],
+ ["TB10","Báo cáo","Lớp trình bày","Web","Nội bộ · Intranet",".NET, IIS","4","Vận hành","Báo cáo nghiệp vụ"],
+ ["TB11","Dashboard WF","Lớp trình bày","Web","Nội bộ","HTML/JS tĩnh, UIKit","","Đang xây dựng","Giám sát, xử lý sự cố quy trình tự động"],
+ ["TB12","Thư viện","Lớp trình bày","Web","Internet",".NET, IIS","3","Vận hành","Văn phòng điện tử"],
+ ["TB13","Banca","Lớp trình bày","Web","Đại lý · Intranet, DC Agribank",".NET, IIS","5","Vận hành","Bán bảo hiểm tại quầy Agribank qua mạng riêng"],
+ ["TB14","Banca Internet","Lớp trình bày","Web","Đại lý · Internet",".NET, IIS","5","Vận hành","Banca truy cập qua Internet"],
+ ["TB15","Webview Banca Agri","Lớp trình bày","Web nhúng","Đại lý · Intranet, DC Agribank",".NET, IIS","5","Thí điểm","Màn hình cấp đơn nhúng vào web banca do Agribank tự xây"],
+ ["TB16","Ctien","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Web B2B cho ngân hàng nhập yêu cầu bảo hiểm, chuyển tiền"],
+ ["TB17","Sale","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Bán hàng trực tuyến cho đại lý, cán bộ ABIC"],
+ ["TB18","BC2C","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Báo cáo banca hai chiều hằng tháng: tự tổng hợp, cán bộ ABIC xác nhận, thông báo đầu mối Agribank qua Zalo"],
+ ["TB19","TraCuu","Lớp trình bày","Web","Internet",".NET, IIS","1–4","Vận hành","Tra cứu hợp đồng, giấy chứng nhận bảo hiểm cho khách hàng"],
+ ["TB20","Web bán hàng trực tuyến","Lớp trình bày","Web","Cộng đồng · Internet","IIS","3","Vận hành","Khách hàng mua sản phẩm bán lẻ; đối tác phát triển, bàn giao trọn gói"],
+ ["TB21","MyAbic","Lớp trình bày","Ứng dụng di động","Internet","","","Vận hành","Ứng dụng khách hàng: mua sản phẩm bán lẻ, quản lý hợp đồng"],
+ ["TB22","Payment","Lớp trình bày","Web","Cộng đồng · Internet",".NET, IIS","5","Vận hành","Thanh toán trực tuyến; nhận thông báo kết quả từ trung gian thanh toán"],
+ ["TB23","Home page","Lớp trình bày","Web","Cộng đồng · Internet","IIS","5","Vận hành","Cổng thông tin công ty; đối tác phát triển, bàn giao trọn gói"],
+ ["TB24","Viewer","Lớp trình bày","Thành phần nhúng","Internet","Sản phẩm thương mại","1–4","Vận hành","Xem file đính kèm, nhúng vào các web"],
+ ["TB25","Power BI","Lớp trình bày","Công cụ phân tích","Nội bộ","Power BI","","Vận hành","Phân tích số liệu từ CSDL báo cáo"],
+ // Lớp tích hợp
+ ["TH01","SSO","Lớp tích hợp","Dịch vụ định danh","Internet","IdentityServer, OIDC","5","Vận hành","Đăng nhập một lần cho ứng dụng của người dùng nội bộ, lực lượng bán, gồm cả VB6; kèm cổng quản trị"],
+ ["TH02","ClosedAPI","Lớp tích hợp","API","Nội bộ · Intranet",".NET 8, IIS, REST/JSON","5","Vận hành","Cổng dữ liệu nội bộ, cửa duy nhất vào CSDL; gọi thủ tục KT_ABIC; kiêm tích hợp Agribank (thu hộ QR), Zalo ZNS, URBOX, AICycle, Elastic"],
+ ["TH03","OpenAPI","Lớp tích hợp","API","Đối tác · Internet",".NET, IIS","5","Vận hành","API cho đối tác, kênh số; whitelist IP"],
+ ["TH04","OpenAPI Banca","Lớp tích hợp","API","Đại lý · Intranet, DC Agribank",".NET, IIS","4","Vận hành","API cho kênh banca Agribank"],
+ ["TH05","NHNo API","Lớp tích hợp","API","Đại lý · Intranet, DC Agribank",".NET, IIS","4","Vận hành","Kết nối thu phí với Agribank"],
+ ["TH06","BaoCao API","Lớp tích hợp","API","Nội bộ · Intranet",".NET, IIS","4","Vận hành","Dữ liệu cho web Báo cáo"],
+ ["TH07","CRM API","Lớp tích hợp","API","Nội bộ · Intranet",".NET, IIS","3","Vận hành","Dữ liệu cho CRM"],
+ ["TH08","BancaAPI","Lớp tích hợp","API","Nội bộ · Intranet",".NET, IIS","4–5","Vận hành","Ký số chứng từ kênh banca"],
+ ["TH09","HSKTAPI","Lớp tích hợp","API","Nội bộ · Intranet",".NET, IIS","4–5","Vận hành","Ký số hồ sơ khai thác"],
+ ["TH10","ForSaleAPI","Lớp tích hợp","API","Nội bộ",".NET, IIS","","Chuyển vào ClosedAPI","API bán hàng"],
+ ["TH11","DataAPI","Lớp tích hợp","API","Nội bộ",".NET, IIS","","Chuyển vào ClosedAPI","API dữ liệu"],
+ // Lớp nghiệp vụ
+ ["NV01","Nghiệp vụ lõi","Lớp nghiệp vụ","Thủ tục CSDL","CSDL","Oracle PL/SQL","","Vận hành","Bảo hiểm gốc, đồng và tái bảo hiểm, hoa hồng, kế toán, vật tư, khách hàng, báo cáo"],
+ ["NV02","Engine WF","Lớp nghiệp vụ","Bộ điều phối","CSDL","Oracle PL/SQL, Oracle AQ","","Vận hành","Điều phối quy trình tự động theo định nghĩa khai báo"],
+ ["NV03","SMS Service","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Gửi tin nhắn khách hàng"],
+ ["NV04","Email Service","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Gửi email"],
+ ["NV06","eInvoice","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Phát hành hóa đơn điện tử qua nhà cung cấp"],
+ ["NV07","SyncFile","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","","Vận hành","Đồng bộ file chứng từ về kho file"],
+ ["NV08","Ký số Service","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ · Intranet",".NET, Windows Service","4–5","Vận hành","Ký số chứng từ"],
+ ["NV09","KtKySo","Lớp nghiệp vụ","Dịch vụ nền","Nội bộ",".NET 8, Windows Service","","Đang xây dựng","Ký số chứng từ kế toán"],
+ ["NV10","BACT Service","Lớp nghiệp vụ","Dịch vụ nền","Đại lý · Intranet, DC Agribank",".NET, Windows Service","4","Vận hành","Gửi yêu cầu thu phí Bảo an chủ thẻ tới ngân hàng (thu hộ)"],
+ // Lớp dữ liệu
+ ["DL01","CSDL giao dịch","Lớp dữ liệu","CSDL","CSDL","Oracle 19c RAC","","Vận hành","KT_ABIC (nghiệp vụ lõi), W_ABIC (ứng dụng web), LOGCTR (log)"],
+ ["DL02","CSDL báo cáo","Lớp dữ liệu","CSDL","CSDL","Oracle 19c, GoldenGate","","Vận hành","Bản sao từ DL01: R_ABIC (kho báo cáo), W_ABIC (BC2C)"],
+ ["DL03","CSDL dự phòng","Lớp dữ liệu","CSDL","CSDL","Oracle Data Guard","","Vận hành","Bản dự phòng của DL01 và DL02"],
+ ["DL04","Kho file","Lớp dữ liệu","Lưu trữ","Nội bộ · Intranet","Máy chủ file","5","Vận hành","File chứng từ, giấy chứng nhận"],
+ ["DL05","Elastic","Lớp dữ liệu","Lưu trữ, tìm kiếm","Nội bộ","Elasticsearch","","Vận hành","Tìm kiếm nghiệp vụ; log tập trung dùng chung cụm"],
+ // Hạ tầng dùng chung
+ ["HT01","HSM","Hạ tầng dùng chung","Thiết bị bảo mật","Nội bộ","HSM","","Vận hành","Lưu khóa, ký số; ABIC tự vận hành, chứng thư số do Viettel CA cấp"],
+ ["HT02","VPN","Hạ tầng dùng chung","Truy cập từ xa","Biên mạng","","","Vận hành","Bắt buộc khi dùng ứng dụng nội bộ từ ngoài văn phòng"],
+ // Hệ thống ngoài
+ ["NG01","Agribank — hệ thống thu phí","Hệ thống ngoài","Ngân hàng","","","","Vận hành","Thu phí bảo hiểm, thu hộ Bảo an chủ thẻ"],
+ ["NG02","Agribank — Trung tâm quản lý dữ liệu","Hệ thống ngoài","Ngân hàng","","","","Vận hành","Nhận dữ liệu tính phí bù vốn điều chuyển (FTP) cho chi nhánh, hằng ngày"],
+ ["NG03","Agribank — web banca","Hệ thống ngoài","Ngân hàng","","","","Thí điểm","Web banca Agribank tự xây, nhúng màn hình cấp đơn của ABIC"],
+ ["NG04","VNPAY","Hệ thống ngoài","Trung gian thanh toán","","","","Vận hành","Thanh toán trực tuyến"],
+ ["NG05","JETPAY, SmartMoney","Hệ thống ngoài","Trung gian thanh toán","","","","Vận hành","Thanh toán trực tuyến, phát sinh ít"],
+ ["NG06","Hilo","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Hóa đơn điện tử"],
+ ["NG07","Viettel CA","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Chứng thư số"],
+ ["NG08","Viettel SMS","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Gửi tin nhắn"],
+ ["NG09","Zalo OA","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Tài khoản Zalo chính thức: thông báo, chăm sóc khách hàng"],
+ ["NG10","Google Workspace","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Email"],
+ ["NG11","URBOX","Hệ thống ngoài","Nhà cung cấp","","","","Vận hành","Voucher, quà tặng"],
+ ["NG12","MISA","Hệ thống ngoài","Phần mềm","","","","Độc lập","Nhân sự, tiền lương"],
+ ["NG13","Base","Hệ thống ngoài","Phần mềm dịch vụ","","","","Vận hành","Quản lý công việc; đồng bộ với Thư viện"],
+ ["NG14","AICycle","Hệ thống ngoài","Nhà cung cấp dữ liệu","","","","Vận hành","Dữ liệu xe: danh mục xe cho CMS"],
+].map(r=>({code:r[0],name:r[1],layer:r[2],type:r[3],zone:r[4],tech:r[5],lvl:r[6],status:r[7],desc:r[8]}));
+const BY = Object.fromEntries(COMP.map(c=>[c.code,c]));
+
+/* ========== DANH MỤC KẾT NỐI (Phụ lục B) ========== */
+const KN = [
+ ["B.1 Truy cập của người sử dụng",[
+  ["KN01","ND01","TB01, TB02","Nghiệp vụ bảo hiểm, kế toán","Ứng dụng cài trên máy trạm, mạng nội bộ","Đồng bộ"],
+  ["KN02","ND01","TB03–TB11","Nghiệp vụ trên web nội bộ","HTTPS trong mạng nội bộ; VPN khi ở ngoài văn phòng","Đồng bộ"],
+  ["KN03","ND01","TB12","Văn phòng điện tử","HTTPS qua Internet","Đồng bộ"],
+  ["KN04","ND02","TB13","Bán bảo hiểm tại quầy","HTTPS qua mạng riêng Agribank","Đồng bộ"],
+  ["KN05","ND02","TB14, TB16, TB17","Bán, nhập yêu cầu bảo hiểm","HTTPS qua Internet","Đồng bộ"],
+  ["KN06","ND02","TB15","Cấp đơn trong web banca Agribank","Màn hình ABIC nhúng vào NG03","Đồng bộ"],
+  ["KN07","ND03","TB19–TB23","Mua bảo hiểm, thanh toán, tra cứu hợp đồng, GCN","HTTPS qua Internet; ứng dụng di động","Đồng bộ"],
+  ["KN08","ND04","TB18","Xem, đối chiếu báo cáo banca","HTTPS; đường dẫn gửi qua Zalo OA","Đồng bộ"],
+  ["KN09","ND05","TH03","Bán, nhúng bảo hiểm","REST qua Internet, whitelist IP","Đồng bộ"]]],
+ ["B.2 Ứng dụng với lớp tích hợp và dữ liệu",[
+  ["KN10","TB01, TB02","DL01","Đọc, ghi dữ liệu nghiệp vụ","Kết nối Oracle trực tiếp (OO4O), client-server","Đồng bộ"],
+  ["KN11","TB03, TB04, TB09, TB13","DL01","Đọc, ghi dữ liệu nghiệp vụ","Kết nối Oracle trực tiếp; đang chuyển sang ClosedAPI","Đồng bộ"],
+  ["KN12","TB06, TB07, TB10, TB14, TB15, TB19, TB22","DL01","Chức năng chưa chuyển sang ClosedAPI","Kết nối Oracle trực tiếp; đang chuyển sang ClosedAPI","Đồng bộ"],
+  ["KN13","TB08","DL01","Cập nhật dữ liệu theo yêu cầu đã duyệt","Kết nối Oracle trực tiếp","Đồng bộ"],
+  ["KN14","TB05–TB07, TB10, TB14–TB19, TB22","TH02","Nghiệp vụ qua cổng dữ liệu nội bộ","REST/JSON","Đồng bộ"],
+  ["KN15","TB11","TH02","Giám sát, xử lý quy trình tự động","REST/JSON; APIKey thiết bị + phiên đăng nhập tài khoản ứng dụng; làm mới 15 giây/lần","Đồng bộ"],
+  ["KN16","TB17, TB20, TB21","TH03","Bán hàng, quản lý hợp đồng","REST/JSON","Đồng bộ"],
+  ["KN17","TB01–TB14, TB16–TB18","TH01","Đăng nhập một lần","OIDC; VB6 và các web còn lại chuyển xong 10/2026","Đồng bộ"],
+  ["KN18","TB18","DL02","Số liệu báo cáo banca","Đọc bản sao W_ABIC","Đồng bộ"],
+  ["KN19","TB25","DL02","Phân tích số liệu","Nạp dữ liệu từ R_ABIC","Theo lô"]]],
+ ["B.3 Lớp tích hợp",[
+  ["KN20","TH02","NV01","Toàn bộ nghiệp vụ qua ClosedAPI","Gọi thủ tục KT_ABIC qua thư viện KnOracle. Xác thực client: APIKey + IP + nhóm quyền, kiểm trong CSDL; phiên đăng nhập SessionID","Đồng bộ"],
+  ["KN21","TH03","TH02","Nghiệp vụ đối tác, kênh số","REST/JSON","Đồng bộ"],
+  ["KN22","TH03","DL01","Chức năng chưa chuyển sang ClosedAPI","Kết nối Oracle trực tiếp; đang chuyển sang ClosedAPI","Đồng bộ"],
+  ["KN23","NG02","NV01","Lấy dữ liệu tính phí bù FTP","Agribank gọi API của ABIC trên máy chủ API đặt tại vùng ngoài DC Agribank; phân trang, đánh dấu đã lấy (PKG_FTP)","Theo lô, hằng ngày"],
+  ["KN24","TH04, TH05","NV01","Tạo đơn, xác nhận thanh toán, tra cứu hợp đồng banca","Gọi thủ tục API_BANCA","Đồng bộ"],
+  ["KN25","NG01","TH05","Thu phí qua ngân hàng","SOAP, ISO 8583, mạng riêng","Đồng bộ"],
+  ["KN26","NG13","TH03 → TH02","Đồng bộ công việc với Thư viện","Webhook, OpenAPI chuyển tiếp sang ClosedAPI","Bất đồng bộ"],
+  ["KN27","TH02","NG01","Thu hộ qua QR, báo có","REST, OAuth2; cập nhật W_ABIC.PKG_THU_HO","Đồng bộ"],
+  ["KN28","TH02","NG11","Nạp quà, voucher; đối soát ngày","REST; hàng chờ W_ABIC.BH_DL_THUONG_GD_TTRANG","Bất đồng bộ"],
+  ["KN29","TH02","NG14","Đồng bộ danh mục xe cho CMS","REST","Theo lô"],
+  ["KN30","TH02","DL05","Tìm kiếm nghiệp vụ, OCR","Elasticsearch client","Đồng bộ"]]],
+ ["B.4 Xử lý nền và bảng chờ",[
+  ["KN31","NV02","NV01","Chạy từng bước quy trình tự động","Hàng đợi Oracle AQ PHT_MQ; job worker lấy việc","Bất đồng bộ"],
+  ["KN32","NV01","NV03","Tin nhắn gửi đi","Bảng chờ BH_SMS_MT; lấy tin chờ PBH_SMS_MT_TON, báo kết quả PBH_SMS_MT_NH","Bất đồng bộ"],
+  ["KN33","NV03","NV01","Tin nhắn đến: tra cứu, hủy theo cú pháp","Gọi thủ tục PBH_SMS_MO_NH","Đồng bộ"],
+  ["KN34","NV01","NV04","Email","Bảng chờ HT_EMAIL, tệp đính kèm W_ABIC.HT_EMAIL_ATTACHMENT; báo kết quả PHT_EMAIL.UPDATE_TTRANG","Bất đồng bộ"],
+  ["KN35","NV01","TH02","Thông báo Zalo","Bảng chờ W_ABIC.BH_MSG (PKG_ZALO); ClosedAPI lấy tin chờ, báo kết quả; token Zalo lưu trong CSDL","Bất đồng bộ"],
+  ["KN36","NV01","NV06","Hóa đơn điện tử","Bảng chờ BH_HDDT; job kiểm tra PBH_HDDT_KTRA_RUN","Bất đồng bộ"],
+  ["KN37","NV01","NV08, NV09","Chứng từ chờ ký","Bảng chờ KT_KY, KT_KY_FILE (PKT_KY.KY_DS_CHO); KtKySo quét 10 giây/lần, ký trong khung giờ đêm","Bất đồng bộ"],
+  ["KN38","NV09","TH02","Dựng PDF chứng từ, lưu kho file","REST/JSON, APIKey","Đồng bộ"],
+  ["KN39","NV09","TH08","Yêu cầu ký file trong kho","REST","Đồng bộ"],
+  ["KN40","TH08","HT01","Ký số","Thiết bị HSM","Đồng bộ"],
+  ["KN41","TH08","NV01","Trả kết quả ký","Gọi thủ tục PKT_KY.KY_FILE_KT","Bất đồng bộ"],
+  ["KN42","NV01","NV07","Chỉ mục file GCN, chứng từ","Bảng W_ABIC.KHO, KHO_FILE (PHT_KHO.DONGBO_FILE)","Bất đồng bộ"],
+  ["KN43","NV07","DL04","Đồng bộ file về kho","Máy chủ file","Bất đồng bộ"]]],
+ ["B.5 Hệ thống ngoài",[
+  ["KN44","NV03","NG08","Gửi, nhận tin nhắn","API nhà cung cấp","Bất đồng bộ"],
+  ["KN45","NV04","NG10","Gửi email","Google Workspace","Bất đồng bộ"],
+  ["KN46","TH02","NG09","Tin ZNS","API Zalo, OAuth","Bất đồng bộ"],
+  ["KN47","NV06","NG06","Phát hành hóa đơn điện tử","API nhà cung cấp","Bất đồng bộ"],
+  ["KN48","NV10","NG01","Yêu cầu thu hộ phí Bảo an chủ thẻ","Mạng riêng Agribank","Bất đồng bộ"],
+  ["KN49","NG04","TB22","Kết quả thanh toán","Webhook HTTPS","Bất đồng bộ"],
+  ["KN50","NG04","DL01","Đối soát giao dịch trung gian thanh toán","File giao dịch tải từ cổng VNPAY → bảng W_ABIC.KH_TGTT_STG_VNPAY → đối soát với sổ phụ ngân hàng (PKH_TGTT) → hạch toán (PBH_TGTT); đang triển khai","Thủ công"],
+  ["KN51","HT01","NG07","Chứng thư số","Chứng thư do Viettel CA cấp, lưu trên HSM","—"]]],
+ ["B.6 Dữ liệu",[
+  ["KN52","DL01","DL02","Nhân bản KT_ABIC, W_ABIC sang R_ABIC, W_ABIC","Oracle GoldenGate","Bất đồng bộ, liên tục"],
+  ["KN53","DL01, DL02","DL03","Bản dự phòng","Oracle Data Guard","Bất đồng bộ, liên tục"],
+  ["KN54","NV01","DL02","Đọc số liệu báo cáo; ghi bảng tổng hợp phí bù FTP, BC2C tháng","DB link DBL_DBRPT","Theo lô"],
+  ["KN55","NV01, NV02","DL01","Log job, lỗi, gọi API","Schema LOGCTR, cùng CSDL","Đồng bộ"]]],
+];
+const KN_ALL = KN.flatMap(([g,rows])=>rows.map(r=>({g,code:r[0],src:r[1],dst:r[2],what:r[3],how:r[4],kind:r[5]})));
+const KN_BY = Object.fromEntries(KN_ALL.map(k=>[k.code,k]));
+
+/* ========== HELPERS ========== */
+const esc = s => String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+// Biến mã thành phần / kết nối trong văn bản thành chip có tooltip
+const CODE_RE = /\b(ND|TB|TH|NV|DL|HT|NG|KN)(\d{2})\b/g;
+function L(s){
+  return esc(s).replace(CODE_RE,(m)=> (BY[m]||KN_BY[m]) ? `<span class="c" data-code="${m}">${m}</span>` : m);
+}
+function badge(st){
+  if(!st) return "";
+  const cls = {"Vận hành":"ok","Đang triển khai":"info","Đang xây dựng":"warn","Thí điểm":"pilot","Chuyển vào ClosedAPI":"mute","Độc lập":"mute"}[st]||"mute";
+  return `<span class="b ${cls}">${esc(st)}</span>`;
+}
+function lvl(v){
+  if(!v) return `<span style="color:var(--ink-3)">—</span>`;
+  const hi = parseInt(v.split("–").pop(),10), lo = parseInt(v,10);
+  let h='<span class="lvl" title="Mức '+esc(v)+'">';
+  for(let i=1;i<=5;i++) h+=`<i class="${i<=hi?'on':''}" style="${i<=hi&&i>lo?'opacity:.45':''}"></i>`;
+  return h+`</span> <span style="font-size:12px;color:var(--ink-2)">${esc(v)}</span>`;
+}
+function table(head, rows, opts={}){
+  return `<div class="tbl-wrap"${opts.max?` style="max-height:${opts.max}px"`:""}><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===0&&opts.codeCol!==false?' class="code"':''}>${c}</td>`).join("")}</tr>`).join("")
+  }</tbody></table></div>`;
+}
+const T = (head, rows, opts) => table(head, rows.map(r=>r.map(c=>L(c))), opts);
+const card = (title, body, tag) => `<div class="card">${title?`<h2>${esc(title)}${tag?` <span class="tag">${esc(tag)}</span>`:""}</h2>`:""}${body}</div>`;
+const ul = items => `<ul class="clean">${items.map(i=>`<li>${L(i)}</li>`).join("")}</ul>`;
+const node = code => { const c=BY[code]; return `<span class="node${c&&c.status!=="Vận hành"?' dim':''}" data-code="${code}"><b>${code}</b>${esc(c?c.name.replace(/ \(VB6\)/,''):'')}</span>`; };
+
+/* ========== CÁC MỤC ========== */
+const SECTIONS = [
+{ id:"overview", num:"◎", group:"Tổng quan", title:"Tổng quan kiến trúc", render(){
+  const n = l => COMP.filter(c=>c.layer===l).length;
+  const kpis = [
+    [n("Lớp trình bày"),"Ứng dụng lớp trình bày","TB01–TB25"],
+    [n("Lớp tích hợp"),"Thành phần tích hợp","API, SSO · TH01–TH11"],
+    [KN_ALL.length,"Kết nối được mô tả","KN01–KN55"],
+    [18,"Máy chủ ứng dụng","Bố trí từ 30/10/2026"],
+    [n("Lớp nghiệp vụ"),"Thành phần nghiệp vụ","Lõi, WF, 7 dịch vụ nền"],
+    [n("Hệ thống ngoài"),"Hệ thống bên ngoài","Ngân hàng, thanh toán, dịch vụ số"],
+    ["1.107","Bảng trong schema KT_ABIC","2.517 procedure · 111 package"],
+    [5,"Vùng mạng","Đại lý · Cộng đồng · Đối tác · Nội bộ · CSDL"],
+  ];
+  const layers = [
+    ["Người sử dụng","ND01–ND05",["ND01","ND02","ND03","ND04","ND05"]],
+    ["Lớp trình bày","TB01–TB25",COMP.filter(c=>c.layer==="Lớp trình bày").map(c=>c.code)],
+    ["Lớp tích hợp","TH01–TH11",COMP.filter(c=>c.layer==="Lớp tích hợp").map(c=>c.code)],
+    ["Lớp nghiệp vụ","NV01–NV10",COMP.filter(c=>c.layer==="Lớp nghiệp vụ").map(c=>c.code)],
+    ["Lớp dữ liệu","DL01–DL05",["DL01","DL02","DL03","DL04","DL05"]],
+    ["Hạ tầng dùng chung","HT01–HT02",["HT01","HT02"]],
+    ["Hệ thống ngoài","NG01–NG14",COMP.filter(c=>c.layer==="Hệ thống ngoài").map(c=>c.code)],
+  ];
+  const st = {}; COMP.filter(c=>c.status).forEach(c=>st[c.status]=(st[c.status]||0)+1);
+  const stTotal = Object.values(st).reduce((a,b)=>a+b,0);
+  return `
+  <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Nghiệp vụ lõi là thủ tục PL/SQL trong CSDL; người sử dụng, đối tác và nhà cung cấp kết nối qua ClosedAPI, OpenAPI và API kênh Agribank. Di chuột lên mã thành phần để xem mô tả, bấm để mở danh mục.</p>
+  <div class="grid g4 kpi-row">${kpis.map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
+  <div class="grid g3" style="grid-template-columns:2fr 1fr">
+    ${card("Sơ đồ phân lớp",`<div class="layers">${layers.map(l=>`<div class="layer"><div class="ln">${l[0]}<small>${l[1]}</small></div><div class="lc">${l[2].map(node).join("")}</div></div>`).join("")}</div><p class="note">Viền nét đứt: thành phần chưa ở trạng thái vận hành (thí điểm, đang xây dựng, chuyển vào ClosedAPI, độc lập).</p>`)}
+    <div class="card-stack">
+      ${card("Trạng thái thành phần",Object.entries(st).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;margin-bottom:4px">${badge(k)}<span class="mono">${v}</span></div><div class="bar" style="grid-template-columns:1fr"><div class="t"><i style="width:${v/stTotal*100}%"></i></div></div></div>`).join(""))}
+      ${card("Mốc sắp tới",`<div class="tl">
+        <div class="ev"><div class="d">01/10/2026</div><div class="n">Chạy song song hạ tầng mới</div><div class="x">35 ứng dụng sang 18 máy chủ theo vùng</div></div>
+        <div class="ev"><div class="d">15/10/2026</div><div class="n">Whitelist IP đối tác</div><div class="x">Tường lửa và API cho OpenAPI</div></div>
+        <div class="ev"><div class="d">10/2026</div><div class="n">SSO toàn bộ</div><div class="x">Kể cả ứng dụng VB6</div></div>
+        <div class="ev"><div class="d">30/10/2026</div><div class="n">Hoàn tất di dời · ClosedAPI nhóm đầu</div><div class="x">Đóng cổng Internet cũ, bắt buộc VPN</div></div>
+      </div>`)}
+    </div>
+  </div>
+  ${card("Đặc điểm chính",ul([
+    "Nghiệp vụ lõi (bảo hiểm gốc, đồng và tái bảo hiểm, kế toán) là thủ tục PL/SQL trong CSDL giao dịch. Engine WF điều phối quy trình tự động ngay trong CSDL.",
+    "Hai ứng dụng desktop VB6 phục vụ nghiệp vụ bảo hiểm và toàn bộ kế toán, nối thẳng CSDL trong mạng nội bộ.",
+    "ClosedAPI là cổng dữ liệu nội bộ; OpenAPI là cổng cho đối tác và kênh số; kênh Agribank có API riêng đặt tại DC Agribank.",
+    "CSDL không tự gọi ra ngoài. Trao đổi với bên ngoài đi qua bảng chờ, dịch vụ nền và API.",
+    "Báo cáo đọc trên CSDL báo cáo, là bản sao GoldenGate của CSDL giao dịch."]))}
+  `;
+}},
+{ id:"intro", num:"1", group:"Nội dung", title:"Giới thiệu", render(){ return `
+  <div class="grid g2">
+    ${card("1.1 Mục đích",`<p style="margin:0;color:var(--ink-2)">Tài liệu mô tả kiến trúc hệ thống thông tin ABIC đang vận hành: người sử dụng, ứng dụng, tích hợp, dữ liệu, hạ tầng. Đây là căn cứ chung khi triển khai dự án, làm việc với đối tác và đánh giá tác động của thay đổi.</p>`)}
+    ${card("1.2 Phạm vi",ul(["Các hệ thống do CNTT ABIC xây dựng, vận hành hoặc tích hợp.","Hiện trạng tháng 9/2026 và các thay đổi CNTT đã chốt, đang triển khai (chương 10).","Định hướng phát triển dài hạn trình bày ở tài liệu riêng."]))}
+  </div>
+  ${card("1.3 Người đọc và góc nhìn",T(["Chương","Câu hỏi trả lời","Người đọc chính"],[
+    ["2. Bối cảnh","ABIC làm việc với ai, qua kênh nào","Lãnh đạo, tổ dự án, đối tác"],
+    ["3. Nguyên tắc kiến trúc","Mọi hệ thống phải tuân theo quy tắc nào","Tất cả"],
+    ["4. Kiến trúc nghiệp vụ","Có những năng lực nghiệp vụ nào, hệ thống nào đảm nhận","Lãnh đạo, nghiệp vụ, tổ dự án"],
+    ["5. Kiến trúc ứng dụng","Có những ứng dụng nào, phân lớp ra sao","Tổ dự án, đội phát triển"],
+    ["6. Kiến trúc tích hợp","Các thành phần trao đổi với nhau và với bên ngoài thế nào","Đội phát triển, đối tác"],
+    ["7. Kiến trúc dữ liệu","Dữ liệu nằm ở đâu, luân chuyển thế nào","Đội phát triển, dữ liệu, báo cáo"],
+    ["8. Kiến trúc công nghệ","Hệ thống chạy trên hạ tầng, nền tảng nào","Đội hạ tầng, vận hành"],
+    ["9. An toàn thông tin","Biện pháp bảo vệ đang áp dụng","Đội hạ tầng, an toàn thông tin"],
+    ["10. Thay đổi đang triển khai","Việc gì đang thay đổi, mốc nào","Tất cả"]]))}
+  <div class="grid g2">
+  ${card("1.4 Quy ước",ul([
+    "Mỗi thành phần có mã theo lớp (Phụ lục A): ND người sử dụng · TB lớp trình bày · TH lớp tích hợp · NV lớp nghiệp vụ · DL lớp dữ liệu · HT hạ tầng dùng chung · NG hệ thống ngoài. Mỗi kết nối có mã KN (Phụ lục B).",
+    "Trạng thái thành phần: Vận hành · Thí điểm · Đang xây dựng · Chuyển vào ClosedAPI · Độc lập.",
+    "Mức quan trọng 1–5, 5 là cao nhất.",
+    "Trình bày theo các góc nhìn của ISO/IEC/IEEE 42010 và bốn miền kiến trúc TOGAF: nghiệp vụ, ứng dụng, dữ liệu, công nghệ."]))}
+  ${card("1.5 Thuật ngữ",T(["Thuật ngữ","Nghĩa"],[
+    ["API","Giao diện lập trình để các hệ thống gọi nhau"],["AQ","Oracle Advanced Queuing — hàng đợi trong CSDL Oracle"],
+    ["Bảng chờ","Bảng trong CSDL chứa việc chờ xử lý; dịch vụ nền quét lấy việc, báo kết quả bằng thủ tục"],
+    ["Banca","Bán bảo hiểm qua ngân hàng"],["BACT","Sản phẩm Bảo an chủ thẻ, kênh banca"],["CSDL","Cơ sở dữ liệu"],
+    ["Data Guard","Công nghệ Oracle duy trì CSDL dự phòng"],["DB link","Liên kết cho phép CSDL này truy vấn, ghi sang CSDL khác"],
+    ["Engine WF","Bộ điều phối quy trình tự động chạy trong CSDL (PHT_QT_XL)"],["GCN","Giấy chứng nhận bảo hiểm"],
+    ["GoldenGate","Công nghệ Oracle nhân bản dữ liệu liên tục"],["HĐĐT","Hóa đơn điện tử"],
+    ["HSM","Thiết bị bảo mật phần cứng lưu khóa và thực hiện ký số"],["OIDC","OpenID Connect — chuẩn đăng nhập một lần"],
+    ["Phí bù FTP","Phí bù vốn điều chuyển (Fund Transfer Pricing) Agribank tính cho chi nhánh"],["SSO","Đăng nhập một lần"],
+    ["Webhook","Hệ thống bên ngoài chủ động gọi vào để báo sự kiện"],["ZNS","Zalo Notification Service — tin thông báo qua Zalo"]],{max:420}))}
+  </div>`;}},
+{ id:"context", num:"2", group:"Nội dung", title:"Bối cảnh", render(){ return `
+  <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Người sử dụng, đối tác và nhà cung cấp kết nối vào qua các kênh dưới đây.</p>
+  <div class="grid g2">
+  ${card("2.1 Người sử dụng",T(["Mã","Người sử dụng","Kênh truy cập"],[
+    ["ND01","Nội bộ ABIC","Ứng dụng desktop VB6; web nội bộ, qua VPN khi ở ngoài văn phòng; văn phòng điện tử"],
+    ["ND02","Lực lượng bán","Banca qua mạng riêng Agribank; Banca Internet; Ctien; Sale; màn hình cấp đơn nhúng trong web banca Agribank"],
+    ["ND03","Khách hàng","Web bán hàng trực tuyến; ứng dụng MyAbic; Payment; TraCuu; Home page"],
+    ["ND04","Đầu mối Agribank","BC2C, nhận thông báo qua Zalo OA"],
+    ["ND05","Hệ thống đối tác","OpenAPI"]]))}
+  ${card("2.3 Đặc điểm chính",ul([
+    "Nghiệp vụ lõi (bảo hiểm gốc, đồng và tái bảo hiểm, kế toán) là thủ tục PL/SQL trong CSDL giao dịch. Engine WF điều phối quy trình tự động ngay trong CSDL.",
+    "Hai ứng dụng desktop VB6 phục vụ nghiệp vụ bảo hiểm và toàn bộ kế toán, nối thẳng CSDL trong mạng nội bộ.",
+    "ClosedAPI là cổng dữ liệu nội bộ; OpenAPI là cổng cho đối tác và kênh số; kênh Agribank có API riêng đặt tại DC Agribank.",
+    "CSDL không tự gọi ra ngoài. Trao đổi với bên ngoài đi qua bảng chờ, dịch vụ nền và API.",
+    "Báo cáo đọc trên CSDL báo cáo, là bản sao GoldenGate của CSDL giao dịch."]))}
+  </div>
+  ${card("2.2 Hệ thống bên ngoài",`<div class="grid g4">${[
+    ["Ngân hàng, kênh phân phối",[["NG01","Agribank — hệ thống thu phí","Thu phí bảo hiểm, thu hộ Bảo an chủ thẻ, thu hộ qua QR"],["NG02","Agribank — TT quản lý dữ liệu","Gọi API của ABIC hằng ngày lấy dữ liệu phí bù FTP"],["NG03","Agribank — web banca","Nhúng màn hình cấp đơn của ABIC"]]],
+    ["Thanh toán",[["NG04","VNPAY","Thanh toán trực tuyến; báo kết quả qua webhook; cung cấp file đối soát"],["NG05","JETPAY, SmartMoney","Thanh toán trực tuyến"]]],
+    ["Dịch vụ số",[["NG06","Hilo","Hóa đơn điện tử"],["NG07","Viettel CA","Chứng thư số"],["NG08","Viettel SMS","Tin nhắn"],["NG09","Zalo OA","Thông báo ZNS"],["NG10","Google Workspace","Email"],["NG11","URBOX","Voucher, quà tặng"],["NG13","Base","Quản lý công việc, đồng bộ với văn phòng điện tử"],["NG14","AICycle","Danh mục xe"]]],
+    ["Độc lập",[["NG12","MISA","Nhân sự, tiền lương; không tích hợp"]]]
+  ].map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${L(i[0])} <b>${esc(i[1])}</b><div style="color:var(--ink-2);font-size:12.5px">${esc(i[2])}</div></div>`).join("")}</div>`).join("")}</div>`)}
+  `;}},
+{ id:"principles", num:"3", group:"Nội dung", title:"Nguyên tắc kiến trúc", render(){
+  const P=[
+    ["NT01","Đặc quyền tối thiểu","Không mở dịch vụ ra Internet trừ khi bắt buộc. Ứng dụng nội bộ truy cập từ ngoài văn phòng phải qua VPN","Phân vùng mạng; HT02"],
+    ["NT02","Phân vùng theo đối tượng sử dụng","Vùng Đại lý, Cộng đồng, Đối tác, Nội bộ, CSDL; vùng CSDL tách riêng; không dùng mạng phẳng, không quản trị dịch vụ theo IP","Chương 8"],
+    ["NT03","ClosedAPI là cửa vào CSDL","Ứng dụng ở các vùng ngoài không nối CSDL trực tiếp; tường lửa chỉ cho máy chủ ClosedAPI vào cổng CSDL","TH02; chương 10"],
+    ["NT04","Hiện đại hóa vận hành","Tài khoản định danh cá nhân thay tài khoản dùng chung; dịch vụ chạy Windows Service với gMSA thay Task Scheduler; triển khai qua GitLab CI/CD; chuẩn .NET 8","Chương 8, 10"],
+    ["NT05","Một bộ điều phối quy trình","Quy trình tự động nhiều bước chạy trên engine WF; không dựng bộ điều phối riêng","NV02"],
+    ["NT06","CSDL không gọi ra ngoài","Nghiệp vụ ghi việc vào bảng chờ, hàng đợi; dịch vụ nền hoặc API thực hiện trao đổi với bên ngoài","Chương 6"],
+    ["NT07","Báo cáo đọc trên bản sao","Báo cáo tổng hợp, phân tích đọc CSDL báo cáo, không đọc CSDL giao dịch","DL02"],
+    ["NT08","Đăng nhập một lần","Ứng dụng của người dùng nội bộ và lực lượng bán đăng nhập qua SSO","TH01"],
+    ["NT09","Đối tác vào qua OpenAPI","Đối tác, kênh số gọi OpenAPI ở vùng Internet, giới hạn theo IP; không nối vào hệ thống nội bộ","TH03"]];
+  return `<p class="lead">Chín nguyên tắc mọi hệ thống phải tuân theo.</p><div class="grid g3">${P.map(p=>`<div class="card pr"><div class="pc">${p[0]}</div><h3>${esc(p[1])}</h3><p>${esc(p[2])}</p><div class="ap">Áp dụng: ${L(p[3])}</div></div>`).join("")}</div>`;
+}},
+{ id:"business", num:"4", group:"Nội dung", title:"Kiến trúc nghiệp vụ", render(){
+  const CAP=[
+    ["Sản phẩm",[["Điều kiện, điều khoản, quy tắc chương trình bảo hiểm; biểu phí","TB05 CMS, NV01"],["Danh mục xe","TB05 CMS, NG14 AICycle"]]],
+    ["Phân phối",[["Bán tại quầy ngân hàng","TB13, TB14, TB15, TH04, TH05"],["Bán qua đại lý, cán bộ, ngân hàng B2B","TB16 Ctien, TB17 Sale"],["Bán trực tuyến cho khách hàng","TB20, TB21, TH03"],["Bán, nhúng qua đối tác","TH03"]]],
+    ["Khai thác, phát hành",[["Nhập, kiểm soát hợp đồng; cấp GCN","TB01, TB04 QLHSKT, NV01, NV02"],["Ký số GCN, chứng từ","NV08, NV09, TH08, TH09, HT01"]]],
+    ["Thu phí, thanh toán",[["Thu phí qua ngân hàng, thu hộ","TH05, NV10, TH02, NG01"],["Thanh toán trực tuyến","TB22, NG04, NG05"],["Đối soát trung gian thanh toán","NV01, NG04"]]],
+    ["Hóa đơn",[["Hóa đơn điện tử","TB09, NV06, NG06"]]],
+    ["Hoa hồng",[["Tính hoa hồng theo hợp đồng, đối tượng bảo hiểm, nghiệp vụ, kênh khai thác sau khi chốt phí","NV01"]]],
+    ["Bồi thường",[["Hồ sơ, giải quyết bồi thường","TB01, NV01"]]],
+    ["Đồng, tái bảo hiểm",[["Phân bổ, tính phí tái","TB01, NV01"]]],
+    ["Kế toán, tài chính",[["Tiền, công nợ, thuế, tài sản, công cụ dụng cụ, vật tư, thu chi nội bộ","TB02, NV01"],["Tiền gửi (kênh đầu tư)","TB07 QLTG"],["Ký số chứng từ kế toán","NV09"]]],
+    ["Khách hàng",[["Quản lý khách hàng, eKYC","TB06 CRM, TH07"],["Tra cứu hợp đồng, GCN","TB19, TB21"],["Thông báo, chăm sóc qua SMS, Zalo, email","NV03, NV04, TH02, NG08–NG10"],["Quà tặng, voucher","TH02, NG11"]]],
+    ["Báo cáo, phân tích",[["Báo cáo nghiệp vụ","TB10, TH06"],["Báo cáo banca hai chiều với Agribank","TB18 BC2C"],["Dữ liệu phí bù FTP cho Agribank","NV01, NG02"],["Phân tích số liệu","TB25 Power BI"]]],
+    ["Hỗ trợ, quản trị",[["Trình, duyệt yêu cầu nghiệp vụ","TB03 QuyTrinh"],["Hỗ trợ người dùng","TB08 YeuCau"],["Văn phòng điện tử, quản lý công việc","TB12, NG13"],["Giám sát quy trình tự động","TB11 Dashboard WF"],["Nhân sự, tiền lương","NG12 MISA"]]]];
+  const MOD=[["Bảo hiểm gốc — hợp đồng, bồi thường, banca, GCN","BH_ · PBH_",559,1396],["Hạ tầng dùng chung — quyền, hàng đợi, email, SMS, quy trình tự động","HT_ · PHT_",61,60],["Tái bảo hiểm","TBH_ · PTBH_",59,147],["Kế toán tổng hợp, ký số chứng từ","KT_ · PKT_ · BKT_",47,190],["Khách hàng","KH_ · PKH_",32,90],["Hợp đồng dùng chung","HD_ · PHD_",28,94],["Kế toán vật tư","VT_ · PVT_",25,80],["Báo cáo tổng hợp","BC_ · PBC_",21,73]];
+  const bar=(v,m)=>`<div class="bar"><div class="t"><i style="width:${v/m*100}%"></i></div><span>≈${v.toLocaleString("vi-VN")}</span></div>`;
+  return `
+  ${card("4.1 Bản đồ năng lực",`<div class="grid g4">${CAP.map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${esc(i[0])}<div>${L(i[1])}</div></div>`).join("")}</div>`).join("")}</div>`,"12 nhóm")}
+  <div class="grid g2" style="grid-template-columns:3fr 2fr">
+  ${card("4.2 Phân hệ nghiệp vụ lõi",`<p style="margin:0 0 12px;color:var(--ink-2)">Nghiệp vụ lõi (${L("NV01")}) gồm các phân hệ trong schema KT_ABIC, nhận diện theo tiền tố tên đối tượng.</p>`+
+    table(["Phân hệ","Tiền tố","Bảng","Thủ tục"],MOD.map(m=>[esc(m[0]),`<span class="mono">${m[1]}</span>`,bar(m[2],559),bar(m[3],1396)]),{codeCol:false})+
+    `<p class="note">Toàn schema: <b>1.107 bảng · 111 package · 2.517 procedure · 438 function</b>. Phần lớn các tiền tố còn lại (TT_ tiền tệ, PTS_, PSE_, PTA_, PCD_…) thuộc các phân hệ kế toán.</p>`)}
+  ${card("4.3 Quy trình tự động",`<ol class="flow">
+    <li>Engine WF (${L("NV02")}) chạy các quy trình nhiều bước theo định nghĩa khai báo.</li>
+    <li>Mỗi bước gọi thủ tục nghiệp vụ qua hàng đợi AQ.</li>
+    <li>Bước chờ điều kiện được hoãn và thử lại theo lịch.</li>
+    <li>Bước lỗi sinh sự cố để người dùng xử lý trên Dashboard WF (${L("TB11")}).</li></ol>
+    <div class="callout" style="margin-top:14px">Quy trình đang chạy: kiểm soát, xuất hóa đơn, hạch toán hợp đồng theo nghiệp vụ và kênh (kênh trực tuyến, Bảo an chủ thẻ, xe cơ giới…); ký số chứng từ kế toán.</div>`)}
+  </div>`;
+}},
+{ id:"application", num:"5", group:"Nội dung", title:"Kiến trúc ứng dụng", render(){ return `
+  <div class="grid kpi-row k6">${[["2","Ứng dụng desktop","VB6"],["19","Ứng dụng web","thêm 1 màn hình nhúng"],["1","Ứng dụng di động","MyAbic"],["10","API",".NET, IIS"],["1","Dịch vụ định danh","SSO · IdentityServer"],["7","Dịch vụ nền","Windows Service"]].map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
+  ${card("5.1 Phân lớp",T(["Lớp","Vai trò","Thành phần"],[
+    ["Người sử dụng","Người, hệ thống sử dụng dịch vụ của ABIC","ND01–ND05"],
+    ["Lớp trình bày","Giao diện người dùng: desktop, web, di động","TB01–TB25"],
+    ["Lớp tích hợp","Cổng API, định danh; kiểm soát truy cập vào nghiệp vụ và dữ liệu","TH01–TH11"],
+    ["Lớp nghiệp vụ","Nghiệp vụ lõi, điều phối quy trình, dịch vụ nền","NV01–NV04, NV06–NV10"],
+    ["Lớp dữ liệu","CSDL giao dịch, báo cáo, dự phòng; kho file; tìm kiếm","DL01–DL05"],
+    ["Hạ tầng dùng chung","Ký số, truy cập từ xa","HT01, HT02"],
+    ["Hệ thống ngoài","Ngân hàng, thanh toán, nhà cung cấp dịch vụ","NG01–NG14"]],{codeCol:false})+`<p class="note">Lớp nghiệp vụ và lớp dữ liệu tách theo logic: nghiệp vụ lõi và engine WF chạy trong CSDL Oracle; dịch vụ nền chạy trên máy chủ dịch vụ.</p>`)}
+  <div class="grid g2">
+  ${card("5.2 Ứng dụng theo nhóm người dùng",[
+    ["Nội bộ ABIC",["TB01","TB02","TB03","TB04","TB05","TB06","TB07","TB08","TB09","TB10","TB11","TB12"]],
+    ["Lực lượng bán",["TB13","TB14","TB15","TB16","TB17"]],["Đầu mối Agribank",["TB18"]],
+    ["Khách hàng",["TB19","TB20","TB21","TB22","TB23"]],["Dùng chung",["TB24","TB25"]]
+  ].map(([g,c])=>`<div style="margin-bottom:12px"><h3>${g} <span style="color:var(--ink-3);font-weight:400">· ${c.length}</span></h3><div class="lc" style="display:flex;flex-wrap:wrap;gap:6px">${c.map(node).join("")}</div></div>`).join(""))}
+  ${card("5.4 Nền tảng ứng dụng",T(["Nhóm","Công nghệ"],[
+    ["Desktop","VB6 client-server; OO4O; Crystal Reports 9"],
+    ["Web",".NET trên IIS. Web bán hàng trực tuyến và Home page do đối tác phát triển, bàn giao trọn gói. Dashboard WF là HTML/JS tĩnh theo bộ giao diện UIKit"],
+    ["API",".NET trên IIS; ClosedAPI .NET 8, REST/JSON"],["Dịch vụ nền",".NET, Windows Service; KtKySo .NET 8"],
+    ["Truy cập CSDL từ .NET","Thư viện dùng chung KnOracle (AIS.ThuVien.Core) gọi thủ tục Oracle"],
+    ["Nghiệp vụ lõi","Oracle PL/SQL; engine WF dùng Oracle AQ"],["Định danh","IdentityServer, OIDC"]],{codeCol:false}))}
+  </div>`;}},
+{ id:"integration", num:"6", group:"Nội dung", title:"Kiến trúc tích hợp", render(){ return `
+  ${card("6.1 Mẫu tích hợp",T(["Mẫu","Cách hoạt động","Dùng cho","Kết nối"],[
+    ["Gọi API đồng bộ","Ứng dụng gọi REST/JSON; ClosedAPI gọi thủ tục KT_ABIC","Web, dịch vụ nền, Dashboard WF","KN14–KN16, KN20, KN21, KN38, KN39"],
+    ["Kết nối CSDL trực tiếp","Ứng dụng nối Oracle, gọi thủ tục, truy vấn","Ứng dụng desktop VB6; web, API chưa chuyển sang ClosedAPI","KN10–KN13, KN22"],
+    ["API cho đối tác, kênh Agribank","Đối tác, kênh số gọi OpenAPI; hệ thống Agribank gọi API đặt tại DC Agribank","Bán, nhúng bảo hiểm; banca; phí bù FTP","KN09, KN16, KN23–KN25"],
+    ["Bảng chờ","Nghiệp vụ ghi việc vào bảng; dịch vụ nền hoặc ClosedAPI quét lấy việc, gọi bên ngoài, báo kết quả bằng thủ tục","SMS, email, Zalo, HĐĐT, ký số, file, quà tặng","KN28, KN32–KN37, KN42"],
+    ["Hàng đợi AQ","Engine WF đưa từng bước quy trình vào hàng đợi PHT_MQ; job worker thực hiện","Quy trình tự động","KN31"],
+    ["Webhook","Hệ thống ngoài gọi vào báo sự kiện","VNPAY → Payment; Base → OpenAPI → ClosedAPI","KN26, KN49"],
+    ["Nhân bản CSDL","GoldenGate nhân bản liên tục; DB link ghi bảng tổng hợp","Báo cáo","KN52, KN54"],
+    ["Nhập file","File tải từ đối tác, nhập vào bảng trung gian","Đối soát trung gian thanh toán","KN50"]],{codeCol:false}))}
+  <h2 style="margin-top:22px">6.2 Cổng tích hợp</h2>
+  <div class="grid g4">
+    ${card("","<h3>"+L("TH02")+" ClosedAPI</h3>"+ul(["Cổng dữ liệu nội bộ: REST/JSON; gọi thủ tục KT_ABIC qua thư viện KnOracle.","Xác thực client: APIKey cấp theo thiết bị, kiểm cùng địa chỉ IP, đối tác, nhóm quyền trong CSDL. Người dùng đăng nhập nhận phiên SessionID.","Nhóm chức năng: bảo hiểm, bán hàng, banca, báo cáo, CMS, kho file, ký số, quy trình tự động, tiện ích (email, SMS, OCR, tìm kiếm), tích hợp ngoài.","Kiêm tích hợp ra ngoài: Agribank (thu hộ qua QR, OAuth2), Zalo ZNS, URBOX, AICycle, Elastic."]))}
+    ${card("","<h3>"+L("TH03")+" OpenAPI</h3>"+ul(["Cổng cho đối tác và kênh số ở vùng Internet, giới hạn theo IP đối tác.","Chuyển tiếp webhook Base sang ClosedAPI.","Phần truy cập CSDL còn lại đang chuyển sang ClosedAPI."]))}
+    ${card("","<h3>"+L("TH04")+" "+L("TH05")+" API kênh Agribank</h3>"+ul(["Đặt trên máy chủ API tại vùng ngoài DC Agribank.","OpenAPI Banca, NHNo API gọi thủ tục API_BANCA: tạo đơn, xác nhận thanh toán, tra cứu hợp đồng.","NHNo API trao đổi với hệ thống thu phí Agribank bằng SOAP, ISO 8583.","Trung tâm quản lý dữ liệu Agribank gọi API hằng ngày lấy dữ liệu phí bù FTP."]))}
+    ${card("","<h3>"+L("TH01")+" SSO</h3>"+ul(["IdentityServer, OIDC; đăng nhập một lần cho ứng dụng của người dùng nội bộ và lực lượng bán, gồm cả VB6."]))}
+  </div>
+  ${card("6.3 Tích hợp với hệ thống ngoài",T(["Hệ thống","Nghiệp vụ","Cơ chế","Thành phần ABIC","Kết nối"],[
+    ["NG01 Agribank — thu phí","Thu phí, thu hộ Bảo an chủ thẻ, thu hộ qua QR","SOAP, ISO 8583 qua NHNo API; REST, OAuth2 qua ClosedAPI; BACT Service","TH05, TH02, NV10","KN25, KN27, KN48"],
+    ["NG02 Agribank — TT quản lý dữ liệu","Phí bù FTP","Agribank gọi API của ABIC hằng ngày, lấy theo trang","NV01","KN23"],
+    ["NG03 Agribank — web banca","Cấp đơn","Nhúng màn hình của ABIC","TB15","KN06"],
+    ["NG04 VNPAY","Thanh toán trực tuyến","Webhook vào Payment; file giao dịch cho đối soát","TB22, NV01","KN49, KN50"],
+    ["NG06 Hilo","Hóa đơn điện tử","Bảng chờ BH_HDDT → eInvoice → API nhà cung cấp","NV06","KN36, KN47"],
+    ["NG07 Viettel CA","Chứng thư số","Chứng thư lưu trên HSM","HT01","KN51"],
+    ["NG08 Viettel SMS","Tin nhắn","Bảng chờ → SMS Service; tin đến gọi thủ tục xử lý","NV03","KN32, KN33, KN44"],
+    ["NG09 Zalo OA","Thông báo ZNS","Bảng chờ W_ABIC.BH_MSG → ClosedAPI","TH02","KN35, KN46"],
+    ["NG10 Google Workspace","Email","Bảng chờ HT_EMAIL → Email Service","NV04","KN34, KN45"],
+    ["NG11 URBOX","Quà tặng, voucher","ClosedAPI; hàng chờ giao dịch; đối soát ngày","TH02","KN28"],
+    ["NG13 Base","Quản lý công việc","Webhook qua OpenAPI → ClosedAPI","TH03, TH02","KN26"],
+    ["NG14 AICycle","Danh mục xe","ClosedAPI đồng bộ","TH02","KN29"],
+    ["NG12 MISA","Nhân sự, tiền lương","Không tích hợp","—","—"]],{codeCol:false}))}
+  <div class="grid g2">
+    ${card("6.4 Luồng tiêu biểu · Ký số chứng từ kế toán",`<ol class="flow">${[
+      "Nghiệp vụ ghi chứng từ cần ký vào bảng chờ KT_KY, KT_KY_FILE.",
+      "KtKySo quét bảng chờ 10 giây một lần, chỉ ký trong khung giờ đêm.",
+      "KtKySo gọi ClosedAPI dựng PDF chứng từ và lưu vào kho file.",
+      "KtKySo gọi BancaAPI ký file; BancaAPI ký bằng HSM với chứng thư Viettel CA.",
+      "BancaAPI trả kết quả vào thủ tục PKT_KY; chứng từ chuyển trạng thái đã ký."].map(s=>`<li>${L(s)}</li>`).join("")}</ol>`)}
+    ${card("6.4 Luồng tiêu biểu · Thông báo khách hàng",`<ol class="flow">${[
+      "Nghiệp vụ ghi tin vào bảng chờ: SMS (BH_SMS_MT), email (HT_EMAIL), Zalo (W_ABIC.BH_MSG).",
+      "SMS Service, Email Service, ClosedAPI quét tin chờ, gửi qua Viettel SMS, Google Workspace, Zalo ZNS.",
+      "Kết quả gửi được ghi lại bằng thủ tục. Tin nhắn đến theo cú pháp (tra cứu, hủy) gọi thủ tục xử lý ngay."].map(s=>`<li>${L(s)}</li>`).join("")}</ol>`)}
+  </div>`;}},
+{ id:"data", num:"7", group:"Nội dung", title:"Kiến trúc dữ liệu", render(){ return `
+  ${card("7.1 Kho dữ liệu",T(["Mã","Kho","Nội dung","Công nghệ"],[
+    ["DL01","CSDL giao dịch","KT_ABIC: nghiệp vụ lõi. W_ABIC: dữ liệu ứng dụng web, bảng trung gian tích hợp. LOGCTR: log","Oracle 19c RAC"],
+    ["DL02","CSDL báo cáo","R_ABIC: kho báo cáo. W_ABIC: bản sao cho BC2C","Oracle 19c, GoldenGate"],
+    ["DL03","CSDL dự phòng","Bản dự phòng của DL01, DL02","Oracle Data Guard"],
+    ["DL04","Kho file","File chứng từ, GCN; chỉ mục lưu ở W_ABIC.KHO, KHO_FILE","Máy chủ file"],
+    ["DL05","Elastic","Chỉ mục tìm kiếm nghiệp vụ; log tập trung","Elasticsearch"]]))}
+  <div class="grid g2">
+  ${card("7.2 Luồng dữ liệu",`<ol class="flow">${[
+    "Ứng dụng, API ghi dữ liệu vào DL01 qua thủ tục KT_ABIC.",
+    "GoldenGate nhân bản liên tục KT_ABIC, W_ABIC sang DL02 (KN52).",
+    "Báo cáo, BC2C, Power BI đọc DL02 (KN18, KN19). Số liệu công nợ được chụp hằng đêm trên DL02.",
+    "Một số bảng tổng hợp (phí bù FTP, BC2C tháng) được nghiệp vụ lõi ghi sang DL02 qua DB link DBL_DBRPT (KN54).",
+    "Data Guard duy trì bản dự phòng của DL01, DL02 (KN53)."].map(s=>`<li>${L(s)}</li>`).join("")}</ol>`)}
+  <div class="card-stack">
+  ${card("7.3 Dữ liệu chủ",T(["Dữ liệu","Nơi quản lý"],[
+    ["Khách hàng","Phân hệ khách hàng KT_ABIC (KH_); CRM"],["Sản phẩm: điều kiện, điều khoản, quy tắc","CMS"],
+    ["Danh mục xe","CMS, đồng bộ từ AICycle"],["Người dùng, quyền","Phân hệ hạ tầng KT_ABIC (HT_, PHT_NSD); SSO"],
+    ["Định nghĩa quy trình tự động","Engine WF (bảng QT_*)"]],{codeCol:false}))}
+  ${card("7.5 Log",T(["Loại","Nơi lưu"],[["Log job, lỗi, gọi API của PL/SQL","LOGCTR, trong DL01"],["Log ứng dụng, máy chủ","Elastic (DL05)"]],{codeCol:false}))}
+  </div></div>
+  ${card("7.4 Bảng trung gian tích hợp",T(["Bảng","Nội dung","Thành phần xử lý"],[
+    ["BH_SMS_MT, BH_SMS_MO","Tin nhắn đi, đến","NV03"],["HT_EMAIL; W_ABIC.HT_EMAIL_ATTACHMENT","Email, tệp đính kèm","NV04"],
+    ["W_ABIC.BH_MSG","Tin Zalo","TH02"],["BH_HDDT","Hóa đơn điện tử","NV06"],["KT_KY, KT_KY_FILE","Chứng từ chờ ký","NV08, NV09"],
+    ["W_ABIC.KHO, KHO_FILE","Chỉ mục file","NV07"],["W_ABIC.BH_DL_THUONG_GD_TTRANG","Giao dịch quà tặng","TH02"],
+    ["W_ABIC.KH_TGTT_STG_VNPAY, KH_TGTT_LSGD","Giao dịch trung gian thanh toán","NV01"],["Hàng đợi AQ PHT_MQ","Bước quy trình tự động","NV02"]]))}
+  `;}},
+{ id:"technology", num:"8", group:"Nội dung", title:"Kiến trúc công nghệ", render(){
+  const SRV=[[1,"Server Banca","Đại lý · Internet","TB14","5"],[2,"Server Banca DR","Đại lý · Intranet, DC Agribank","TB13, TB15","5"],[3,"Server API DR","Đại lý · Intranet, DC Agribank","TH04, TH05, NV10","4"],[4,"Server Web chung","Internet","TB16, TB17, TB18, TB19, TB24","1–4"],[5,"Server Web Internet","Internet","TB12","3"],[6,"Server Web Intranet","Nội bộ · VPN","TB03–TB08","1–3"],[7,"Server File","Nội bộ · Intranet","DL04","5"],[8,"Server HDDT","Nội bộ · VPN","TB09","5"],[9,"Server Payment","Cộng đồng · Internet","TB22","5"],[10,"Server SSO","Internet","TH01","5"],[11,"Server trực tuyến","Cộng đồng · Internet","TB20","3"],[12,"Server Homepage","Cộng đồng · Internet","TB23","5"],[13,"Server Báo cáo","Nội bộ · Intranet","TB10, TH06","4"],[14,"Server ký số","Nội bộ · Intranet","TH08, TH09, NV08","4–5"],[15,"Server OpenAPI","Đối tác · Internet","TH03","5"],[16,"Server ClosedAPI","Nội bộ · Intranet","TH02","5"],[17,"Server API Intranet","Nội bộ · Intranet","TH07","3"],[18,"Server Service","Nội bộ · Intranet","NV03, NV04, NV06, NV07",""]];
+  const ZONES=[["Đại lý","Kênh banca, lực lượng bán","Internet; Intranet qua mạng riêng Agribank, máy chủ đặt tại vùng ngoài DC Agribank"],["Cộng đồng","Khách hàng","Internet"],["Đối tác","Hệ thống đối tác","Internet, whitelist IP"],["Nội bộ","Người dùng nội bộ, API nội bộ, dịch vụ nền","Intranet; VPN khi ở ngoài văn phòng"],["CSDL","CSDL, nghiệp vụ lõi","Tách riêng khỏi các vùng khác"]];
+  const zoneOf = z => z.startsWith("Đại lý")?"Đại lý":z.startsWith("Cộng đồng")?"Cộng đồng":z.startsWith("Đối tác")?"Đối tác":z.startsWith("Nội bộ")?"Nội bộ":"Internet (chung)";
+  const grouped = {}; SRV.forEach(s=>{(grouped[zoneOf(s[2])]=grouped[zoneOf(s[2])]||[]).push(s)});
+  return `
+  <div class="grid z5">${ZONES.map(z=>`<div class="card"><h3 style="color:var(--brand)">Vùng ${z[0]}</h3><div style="font-size:12.5px"><b>Đối tượng:</b> ${esc(z[1])}</div><div style="font-size:12.5px;color:var(--ink-2);margin-top:4px"><b>Đường vào:</b> ${esc(z[2])}</div></div>`).join("")}</div>
+  ${card("8.2 Máy chủ ứng dụng theo vùng",`<div class="grid g3">${Object.entries(grouped).map(([z,list])=>`<div class="zone"><h3>${z}<span class="b mute">${list.length} máy chủ</span></h3>${list.map(s=>`<div class="srv"><div><b>#${s[0]} ${esc(s[1])}</b><div style="color:var(--ink-3);font-size:11.5px">${esc(s[2])}</div><div style="margin-top:3px">${L(s[3])}</div></div><div style="white-space:nowrap">${lvl(s[4])}</div></div>`).join("")}</div>`).join("")}</div>`,"Áp dụng từ 30/10/2026")}
+  <div class="grid g2">
+  ${card("8.3 CSDL",T(["CSDL","Vai trò","Công nghệ"],[["tcdn","DL01 CSDL giao dịch","Oracle 19c RAC"],["tcdnrp","DL02 CSDL báo cáo","Oracle 19c, GoldenGate"],["tcdndr, tcdnrpdr","DL03 dự phòng của tcdn, tcdnrp","Oracle Data Guard"]]))}
+  ${card("8.5 Môi trường",T(["Môi trường","Thành phần"],[["Production","Như mục 8.2, 8.3"],["Test, UAT","Máy chủ test; CSDL test TCDN_CV"]]))}
+  ${card("8.4 Nền tảng",T(["Thành phần","Công nghệ"],[["Máy chủ ứng dụng","Windows Server, IIS; ảo hóa VMware"],["Ứng dụng .NET","Nhiều phiên bản .NET; chuẩn cho ứng dụng mới và nâng cấp: .NET 8"],["Dịch vụ nền","Windows Service, Task Scheduler; chuẩn mới: Windows Service với gMSA"],["CSDL","Oracle 19c"],["Tìm kiếm, log","Elasticsearch"],["Mã nguồn, triển khai","GitLab; GitLab CI/CD"],["Định danh, truy cập","IdentityServer (OIDC); VPN"]],{codeCol:false}))}
+  ${card("8.6 Vận hành",T(["Hoạt động","Công cụ"],[["Giám sát quy trình tự động","Dashboard WF"],["Log","LOGCTR; Elastic"],["Triển khai","GitLab CI/CD; publish thủ công với ứng dụng chưa chuyển"],["Tác vụ định kỳ","Windows Service; Task Scheduler; job Oracle"]],{codeCol:false}))}
+  </div>`;
+}},
+{ id:"security", num:"9", group:"Nội dung", title:"An toàn thông tin và định danh", render(){
+  const S=[["Mạng","Phân vùng theo đối tượng sử dụng; vùng CSDL tách riêng","Chương 8"],["Truy cập từ xa","VPN bắt buộc với ứng dụng nội bộ khi ở ngoài văn phòng","HT02"],["Đối tác","Whitelist IP đối tác tại tường lửa và API","TH03"],["CSDL","Tường lửa chỉ cho ClosedAPI vào cổng CSDL, áp dụng theo từng ứng dụng đã chuyển","TH02"],["Định danh người dùng","SSO, OIDC cho ứng dụng của người dùng nội bộ và lực lượng bán","TH01"],["Xác thực API","APIKey theo thiết bị, kiểm cùng IP, đối tác, nhóm quyền trong CSDL; phiên đăng nhập","TH02"],["Ký số","Khóa lưu trong HSM do ABIC vận hành; chứng thư số Viettel CA","HT01, NG07"],["Tài khoản dịch vụ","gMSA cho dịch vụ nền","Chương 10"],["Nhật ký","LOGCTR; log tập trung Elastic","DL01, DL05"],["Dự phòng","Data Guard cho CSDL giao dịch và CSDL báo cáo","DL03"]];
+  return `<p class="lead">Mười lớp bảo vệ đang áp dụng, từ mạng đến dữ liệu.</p><div class="grid g2">${S.map((s,i)=>`<div class="card" style="display:flex;gap:14px;align-items:flex-start"><div style="flex:none;width:36px;height:36px;border-radius:10px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700">${i+1}</div><div><h3 style="margin:0 0 4px">${esc(s[0])}</h3><div style="color:var(--ink-2);font-size:13px">${esc(s[1])}</div><div style="margin-top:6px;font-size:12px;color:var(--ink-3)">Thành phần: ${L(s[2])}</div></div></div>`).join("")}</div>`;
+}},
+{ id:"changes", num:"10", group:"Nội dung", title:"Thay đổi đang triển khai", render(){
+  const C=[["Di dời hạ tầng","35 ứng dụng sang 18 máy chủ theo vùng; chạy song song từ 01/10; chuyển đổi 15–30/10; đóng cổng Internet cũ, bắt buộc VPN, tắt máy chủ cũ","Đang triển khai","30/10/2026"],["Whitelist IP đối tác","Tường lửa và API cho OpenAPI","Đang triển khai","15/10/2026"],["Chuyển về ClosedAPI","QuyTrinh, HDDT, QLHSKT, Banca chuyển trước; ứng dụng, OpenAPI còn lại chuyển theo từng ứng dụng; ForSaleAPI, DataAPI gộp vào ClosedAPI; tường lửa chặn kết nối CSDL trực tiếp của từng ứng dụng đã chuyển","Đang triển khai","Nhóm đầu: 30/10/2026"],["SSO toàn bộ","Ứng dụng của người dùng nội bộ và lực lượng bán, kể cả VB6","Đang triển khai","10/2026"],["Hiện đại hóa vận hành",".NET 8; Windows Service với gMSA; GitLab CI/CD","Đang triển khai","Theo từng ứng dụng"],["Log tập trung","Log ứng dụng, máy chủ về Elastic","Đang triển khai",""],["Ký số chứng từ kế toán","KtKySo (NV09)","Đang triển khai",""],["Dashboard WF","Giám sát, xử lý quy trình tự động (TB11)","Đang xây dựng",""],["CRM","Quản lý khách hàng, eKYC (TB06)","Đang xây dựng",""],["Đối soát trung gian thanh toán","Đối soát giao dịch VNPAY với sổ phụ ngân hàng, hạch toán (KN50)","Đang triển khai",""],["Chuyển xử lý lô sang engine WF","Xử lý lô cũ (PBH_HTTD) chuyển dần sang quy trình tự động","Đang triển khai",""],["Tái bảo hiểm tự động","Quy trình tái bảo hiểm trên engine WF","Đang xây dựng",""],["Webview Banca Agri","Màn hình cấp đơn nhúng vào web banca Agribank (TB15)","Thí điểm",""]];
+  const cnt=s=>C.filter(c=>c[2]===s).length;
+  return `
+  <div class="grid g4 kpi-row">${[[C.length,"Hạng mục thay đổi"],[cnt("Đang triển khai"),"Đang triển khai"],[cnt("Đang xây dựng"),"Đang xây dựng"],[cnt("Thí điểm"),"Thí điểm"]].map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("")}</div>
+  <div class="grid g2" style="grid-template-columns:1fr 2fr">
+  ${card("Lộ trình di dời hạ tầng",`<div class="tl">
+    <div class="ev"><div class="d">01/10/2026</div><div class="n">Chạy song song</div><div class="x">Hạ tầng mới 18 máy chủ theo vùng</div></div>
+    <div class="ev"><div class="d">15/10/2026</div><div class="n">Whitelist IP đối tác · bắt đầu chuyển đổi</div><div class="x">Tường lửa và API cho OpenAPI</div></div>
+    <div class="ev"><div class="d">10/2026</div><div class="n">SSO toàn bộ</div><div class="x">VB6 và các web còn lại</div></div>
+    <div class="ev"><div class="d">30/10/2026</div><div class="n">Hoàn tất chuyển đổi</div><div class="x">Đóng cổng Internet cũ, bắt buộc VPN, tắt máy chủ cũ; ClosedAPI nhóm đầu (QuyTrinh, HDDT, QLHSKT, Banca)</div></div>
+  </div>`)}
+  ${card("Danh sách thay đổi",table(["Thay đổi","Nội dung","Trạng thái","Mốc"],C.map(c=>[`<b>${esc(c[0])}</b>`,L(c[1]),badge(c[2]),c[3]?`<span class="mono">${esc(c[3])}</span>`:`<span style="color:var(--ink-3)">—</span>`]),{codeCol:false}))}
+  </div>`;
+}},
+{ id:"appA", num:"A", group:"Phụ lục", title:"Danh mục thành phần", render(){
+  const layers=["Tất cả",...new Set(COMP.map(c=>c.layer))];
+  return `
+  <p class="lead">Mỗi thành phần có một mã duy nhất; mọi sơ đồ và danh mục kết nối dùng đúng mã, tên ở đây. Mức là mức quan trọng 1–5 (5 cao nhất): hỏng thì thiệt hại kinh doanh đến đâu.</p>
+  <div class="filters" id="fA">${layers.map((l,i)=>`<button class="pill${i?'':' on'}" data-l="${l}" type="button">${l}</button>`).join("")}<input id="qA" placeholder="Tìm mã, tên, công nghệ, mô tả…" type="search"></div>
+  <div class="card" style="padding:0;overflow:hidden"><div id="tA"></div></div>`;
+}, mount(){
+  let layer="Tất cả", q="";
+  const draw=()=>{
+    const qq=q.toLowerCase();
+    const rows=COMP.filter(c=>(layer==="Tất cả"||c.layer===layer)&&(!qq||Object.values(c).join(" ").toLowerCase().includes(qq)));
+    document.getElementById("tA").innerHTML = table(["Mã","Tên","Lớp","Loại","Vùng mạng","Công nghệ","Mức","Trạng thái","Mô tả"],
+      rows.map(c=>[`<span class="c" data-code="${c.code}">${c.code}</span>`,`<b>${esc(c.name)}</b>`,esc(c.layer),esc(c.type),esc(c.zone||"—"),esc(c.tech||"—"),lvl(c.lvl),badge(c.status),esc(c.desc)]),{max:640})
+      +`<div class="note" style="padding:0 14px 12px">${rows.length} / ${COMP.length} thành phần</div>`;
+  };
+  document.querySelectorAll("#fA .pill").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fA .pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");layer=b.dataset.l;draw();});
+  const qi=document.getElementById("qA"); qi.oninput=()=>{q=qi.value;draw();};
+  if(PENDING){qi.value=PENDING;q=PENDING;PENDING="";}
+  draw();
+}},
+{ id:"appB", num:"B", group:"Phụ lục", title:"Danh mục kết nối", render(){
+  const kinds={}; KN_ALL.forEach(k=>kinds[k.kind]=(kinds[k.kind]||0)+1);
+  return `
+  <p class="lead">Kiểu kết nối: Đồng bộ (gọi, chờ kết quả) · Bất đồng bộ (qua bảng chờ, hàng đợi, webhook) · Theo lô · Thủ công. CSDL không tự gọi HTTP hay gửi email ra ngoài; mọi trao đổi với bên ngoài đi qua ứng dụng, API hoặc dịch vụ nền.</p>
+  <div class="grid g4 kpi-row">${Object.entries(kinds).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,v])=>`<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(k)}</div></div>`).join("")}</div>
+  <div class="filters" id="fB" style="margin-top:16px"><button class="pill on" data-g="" type="button">Tất cả</button>${KN.map(([g])=>`<button class="pill" data-g="${g}" type="button">${g.split(" ").slice(1).join(" ")}</button>`).join("")}<input id="qB" placeholder="Tìm mã, nguồn, đích, nội dung…" type="search"></div>
+  <div class="card" style="padding:0;overflow:hidden"><div id="tB"></div></div>`;
+}, mount(){
+  let g="", q="";
+  const draw=()=>{
+    const qq=q.toLowerCase();
+    const rows=KN_ALL.filter(k=>(!g||k.g===g)&&(!qq||Object.values(k).join(" ").toLowerCase().includes(qq)));
+    document.getElementById("tB").innerHTML = table(["Mã","Nguồn","Đích","Nội dung","Cơ chế, giao thức","Kiểu"],
+      rows.map(k=>[k.code,L(k.src),L(k.dst),esc(k.what),esc(k.how),`<span class="b ${k.kind.startsWith("Đồng")?"ok":k.kind.startsWith("Bất")?"info":k.kind.startsWith("Theo")?"warn":"mute"}">${esc(k.kind)}</span>`]),{max:640})
+      +`<div class="note" style="padding:0 14px 12px">${rows.length} / ${KN_ALL.length} kết nối</div>`;
+  };
+  document.querySelectorAll("#fB .pill").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fB .pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");g=b.dataset.g;draw();});
+  const qi=document.getElementById("qB"); qi.oninput=()=>{q=qi.value;draw();};
+  if(PENDING){qi.value=PENDING;q=PENDING;PENDING="";}
+  draw();
+}},
+{ id:"appC", num:"C", group:"Phụ lục", title:"Đối chiếu thuật ngữ", render(){ return `
+  <p class="lead">Đối chiếu thành phần thường gặp trong mô hình kiến trúc bảo hiểm số với thành phần tương ứng của ABIC.</p>
+  ${card("",T(["Thuật ngữ thông dụng","Thành phần ABIC","Ghi chú"],[
+    ["API Gateway","TH03 OpenAPI; TH04, TH05 cho kênh Agribank",""],["Middleware, cổng trung gian","TH02 ClosedAPI","Cổng dữ liệu nội bộ, kiêm tích hợp một số dịch vụ ngoài"],
+    ["Message broker, event bus","Oracle AQ (engine WF); bảng chờ",""],["Workflow, orchestration","NV02 Engine WF; TB03 QuyTrinh cho trình, duyệt",""],
+    ["Xử lý ngoại lệ","Hoãn, thử lại, sự cố của engine WF; TB11 Dashboard WF",""],["Identity, authentication","TH01 SSO",""],
+    ["eKYC, mở tài khoản","TB06 CRM","eKYC triển khai một phần"],["Quản lý lead","TB06 CRM","Đang xây dựng"],
+    ["Product management","TB05 CMS","Điều kiện, điều khoản, quy tắc"],["Rating, pricing engine","NV01","Biểu phí trong nghiệp vụ lõi; danh mục xe từ AICycle"],
+    ["Policy administration","NV01; TB01",""],["Commission","NV01","Tự tính sau khi chốt phí"],["Claims","NV01; TB01",""],
+    ["Billing, payment","TB22 Payment; TH05; NV10",""],["Ký số, hợp đồng điện tử","NV08, NV09, TH08, TH09, HT01",""],
+    ["Notification service","NV03, NV04; TH02 (Zalo)",""],["File, document storage","DL04; NV07",""],["Core insurance database","DL01",""],
+    ["Accounting","NV01 (KT_, VT_, TT_…); TB02",""],["ETL","GoldenGate; DB link",""],["Data mart","R_ABIC trong DL02",""],
+    ["Data lake","—","Chưa có"],["BI","TB25 Power BI",""],["Trao đổi file (SFTP)","Nhập file thủ công","Đối soát trung gian thanh toán"]],{codeCol:false}))}`;}},
+];
+
+/* ========== ĐIỀU HƯỚNG ========== */
+let CUR = 0, PENDING = "";
+const $ = id => document.getElementById(id);
+function buildNav(){
+  let h="", g="";
+  SECTIONS.forEach((s,i)=>{
+    if(s.group!==g){ g=s.group; h+=`<div class="grp">${g}</div>`; }
+    h+=`<button type="button" data-i="${i}"><span class="num">${s.num}</span>${esc(s.title)}</button>`;
+  });
+  $("nav").innerHTML=h;
+  $("nav").querySelectorAll("button").forEach(b=>b.onclick=()=>{go(+b.dataset.i);closeMenu();});
+}
+function go(i){
+  CUR=(i+SECTIONS.length)%SECTIONS.length;
+  const s=SECTIONS[CUR];
+  $("nav").querySelectorAll("button").forEach(b=>b.classList.toggle("active",+b.dataset.i===CUR));
+  $("title").textContent=s.title;
+  $("crumb").textContent = s.group==="Phụ lục" ? `Phụ lục ${s.num}` : s.group==="Nội dung" ? `Chương ${s.num}` : "Kiến trúc CNTT ABIC";
+  $("pos").textContent=`${CUR+1} / ${SECTIONS.length}`;
+  $("content").innerHTML=`<section>${s.render()}</section>`;
+  $("content").scrollTop=0;
+  s.mount && s.mount();
+  try{ history.replaceState(null,"","#"+s.id); }catch(e){}
+}
+$("prev").onclick=()=>go(CUR-1);
+$("next").onclick=()=>go(CUR+1);
+document.addEventListener("keydown",e=>{
+  if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  if(e.key==="ArrowRight"||e.key==="PageDown") go(CUR+1);
+  if(e.key==="ArrowLeft"||e.key==="PageUp") go(CUR-1);
+});
+// Menu di động
+const closeMenu=()=>{$("side").classList.remove("open");$("scrim").classList.remove("open");};
+$("menuBtn").onclick=()=>{$("side").classList.add("open");$("scrim").classList.add("open");};
+$("scrim").onclick=closeMenu;
+// Giao diện sáng/tối
+$("theme").onclick=()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+  try{ localStorage.setItem("abic-theme", r.dataset.theme); }catch(e){}
+};
+try{ const t=localStorage.getItem("abic-theme"); if(t) document.documentElement.dataset.theme=t; }catch(e){}
+// Tooltip + bấm mã để mở danh mục
+const tip=$("tip");
+document.addEventListener("mouseover",e=>{
+  const el=e.target.closest("[data-code]"); if(!el){tip.style.opacity=0;return;}
+  const code=el.dataset.code, c=BY[code], k=KN_BY[code];
+  if(c) tip.innerHTML=`<b>${code} · ${esc(c.name)}</b>${esc(c.desc)}${c.status?`<br><span style="opacity:.75">${esc(c.layer)} · ${esc(c.status)}</span>`:""}`;
+  else if(k) tip.innerHTML=`<b>${code} · ${esc(k.what)}</b>${esc(k.src)} → ${esc(k.dst)}<br><span style="opacity:.75">${esc(k.how)}</span>`;
+  else return;
+  tip.style.opacity=1;
+});
+document.addEventListener("mousemove",e=>{
+  if(tip.style.opacity!=="1") return;
+  const w=tip.offsetWidth, h=tip.offsetHeight;
+  tip.style.left=Math.min(e.clientX+14, innerWidth-w-8)+"px";
+  tip.style.top=(e.clientY+h+24>innerHeight? e.clientY-h-12 : e.clientY+16)+"px";
+});
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-code]"); if(!el) return;
+  const code=el.dataset.code;
+  const target = KN_BY[code] ? "appB" : "appA";
+  if(SECTIONS[CUR].id===target){ const qi=$(target==="appA"?"qA":"qB"); qi.value=code; qi.dispatchEvent(new Event("input")); return; }
+  PENDING=code; tip.style.opacity=0;
+  go(SECTIONS.findIndex(s=>s.id===target));
+});
+buildNav();
+const start = SECTIONS.findIndex(s=>"#"+s.id===location.hash);
+go(start>=0?start:0);
+</script>
+</body>
+</html>
