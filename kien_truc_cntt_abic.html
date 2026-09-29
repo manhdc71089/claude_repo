@@ -195,6 +195,31 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 :root[data-theme="dark"] .acol.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
 :root[data-theme="dark"] .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
 :root[data-theme="dark"] .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
+/* key points */
+.key{border:1px solid var(--brand);border-top:4px solid var(--brand);background:linear-gradient(180deg,var(--brand-soft),var(--panel) 90px);display:flex;flex-direction:column;gap:12px}
+.key .kh{display:flex;gap:12px;align-items:center}
+.key .kn{flex:none;width:36px;height:36px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16px}
+.key .kt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--brand);font-weight:700}
+.key h3{font-size:16px;margin:2px 0 0;line-height:1.3}
+.key p{margin:0;color:var(--ink-2);font-size:13.5px}
+.gates{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.gate{display:grid;grid-template-columns:minmax(0,1fr) 26px minmax(0,1.3fr);align-items:center}
+.gw{font-size:12.5px;color:var(--ink-2);text-align:right}
+.gn{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:7px 10px;font-size:12.5px}
+.gn b{margin-right:6px}
+.gn small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:2px}
+.ga{height:22px;position:relative}
+.ga::before{content:"";position:absolute;left:4px;right:8px;top:10px;height:2px;background:var(--brand)}
+.ga::after{content:"";position:absolute;right:3px;top:6px;border:5px solid transparent;border-left:7px solid var(--brand);border-right:0}
+.qflow{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);align-items:stretch;margin-top:auto}
+.qflow .ga{align-self:center}
+.qs{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:12.5px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.qs small{display:block;color:var(--ink-3);font-size:11px;margin-top:3px}
+.qs:first-child{border-color:var(--info);background:var(--info-bg)}
+.qno{font-size:12.5px;color:var(--accent);font-weight:600;display:flex;gap:8px;align-items:center}
+.qno span{width:20px;height:20px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-size:11px}
+.arch.hl .an{opacity:.3}
+.arch.hl .an.on{opacity:1;box-shadow:0 0 0 2px var(--lc);transform:translateY(-1px)}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px;font-size:12.5px}
@@ -221,6 +246,11 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
   .arch{flex-direction:column;overflow:visible}
   .acol,.acol.wide{min-width:0}
   .arrow{transform:rotate(90deg);margin:2px 0}
+  .qflow{grid-template-columns:1fr}
+  .qflow .ga{transform:rotate(90deg);width:22px;justify-self:center}
+  .gate{grid-template-columns:1fr}
+  .gate .ga{display:none}
+  .gw{text-align:left;margin-bottom:3px}
   .kpi-row.g4,.k6{grid-template-columns:repeat(2,minmax(0,1fr))}
   .z5{grid-template-columns:minmax(0,1fr)}
 }
@@ -465,6 +495,28 @@ const SECTIONS = [
   const stTotal = Object.values(st).reduce((a,b)=>a+b,0);
   return `
   <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Nghiệp vụ lõi là thủ tục PL/SQL trong CSDL; người sử dụng, đối tác và nhà cung cấp kết nối qua ClosedAPI, OpenAPI và API kênh Agribank. Di chuột lên mã thành phần để xem mô tả, bấm để mở danh mục.</p>
+  <div class="grid g2 keys">
+    <div class="card key" data-hl="TH02,TH03,TH05">
+      <div class="kh"><span class="kn">1</span><div><div class="kt">Điểm then chốt</div><h3>Mỗi nhóm đối tượng vào qua một cổng API riêng</h3></div></div>
+      <p>${L("ClosedAPI là cổng dữ liệu nội bộ; OpenAPI là cổng cho đối tác và kênh số; kênh Agribank có API riêng đặt tại DC Agribank.")}</p>
+      <div class="gates">
+        <div class="gate"><div class="gw">Ứng dụng nội bộ, dịch vụ nền</div><div class="ga"></div><div class="gn"><b>ClosedAPI</b>${L("TH02")}<small>Cổng dữ liệu nội bộ · cửa duy nhất vào CSDL</small></div></div>
+        <div class="gate"><div class="gw">Đối tác, kênh số</div><div class="ga"></div><div class="gn"><b>OpenAPI</b>${L("TH03")}<small>Vùng Internet · whitelist IP</small></div></div>
+        <div class="gate"><div class="gw">Kênh Agribank</div><div class="ga"></div><div class="gn"><b>API kênh Agribank</b>${L("TH04")} ${L("TH05")}<small>Đặt tại DC Agribank</small></div></div>
+      </div>
+    </div>
+    <div class="card key" data-hl="NV01,NV02,DL01,NV03,NV04,NV06,TH02">
+      <div class="kh"><span class="kn">2</span><div><div class="kt">Điểm then chốt</div><h3>CSDL không tự gọi ra ngoài</h3></div></div>
+      <p>CSDL không tự gọi ra ngoài. Trao đổi với bên ngoài đi qua <b>bảng chờ</b>, <b>dịch vụ nền</b> và <b>API</b>.</p>
+      <div class="qflow">
+        <div class="qs"><b>CSDL</b><small>Nghiệp vụ ghi việc</small></div><div class="ga"></div>
+        <div class="qs"><b>Bảng chờ, hàng đợi</b><small>SMS, email, Zalo, HĐĐT, ký số</small></div><div class="ga"></div>
+        <div class="qs"><b>Dịch vụ nền, API</b><small>${L("NV03")} ${L("NV04")} ${L("NV06")} ${L("TH02")}</small></div><div class="ga"></div>
+        <div class="qs"><b>Hệ thống ngoài</b><small>Kết quả báo lại bằng thủ tục</small></div>
+      </div>
+      <div class="qno"><span>✕</span> CSDL không gọi HTTP, không gửi email trực tiếp ra ngoài</div>
+    </div>
+  </div>
   <div class="grid g4 kpi-row">${kpis.map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
   ${card("Bức tranh hệ thống",archMap+`<p class="note">Chỉ thể hiện thành phần tiêu biểu; danh sách đầy đủ ở Phụ lục A. Di chuột lên thành phần để xem mô tả, bấm để mở danh mục.</p>`,"Luồng từ trái sang phải")}
   <div class="grid g2">
@@ -479,8 +531,6 @@ const SECTIONS = [
   ${card("Đặc điểm chính",ul([
     "Nghiệp vụ lõi (bảo hiểm gốc, đồng và tái bảo hiểm, kế toán) là thủ tục PL/SQL trong CSDL giao dịch. Engine WF điều phối quy trình tự động ngay trong CSDL.",
     "Hai ứng dụng desktop VB6 phục vụ nghiệp vụ bảo hiểm và toàn bộ kế toán, nối thẳng CSDL trong mạng nội bộ.",
-    "ClosedAPI là cổng dữ liệu nội bộ; OpenAPI là cổng cho đối tác và kênh số; kênh Agribank có API riêng đặt tại DC Agribank.",
-    "CSDL không tự gọi ra ngoài. Trao đổi với bên ngoài đi qua bảng chờ, dịch vụ nền và API.",
     "Báo cáo đọc trên CSDL báo cáo, là bản sao GoldenGate của CSDL giao dịch."]))}
   `;
 }},
@@ -818,6 +868,14 @@ document.addEventListener("click",e=>{
   if(SECTIONS[CUR].id===target){ const qi=$(target==="appA"?"qA":"qB"); qi.value=code; qi.dispatchEvent(new Event("input")); return; }
   PENDING=code; tip.style.opacity=0;
   go(SECTIONS.findIndex(s=>s.id===target));
+});
+// Điểm then chốt: làm nổi các thành phần liên quan trên sơ đồ
+document.addEventListener("mouseover",e=>{
+  const k=e.target.closest(".key[data-hl]"), arch=document.querySelector(".arch");
+  if(!arch) return;
+  const codes=k?k.dataset.hl.split(","):[];
+  arch.classList.toggle("hl",!!k);
+  arch.querySelectorAll(".an").forEach(n=>n.classList.toggle("on",codes.includes(n.dataset.code)));
 });
 buildNav();
 const start = SECTIONS.findIndex(s=>"#"+s.id===location.hash);
