@@ -196,8 +196,13 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 :root[data-theme="dark"] .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
 :root[data-theme="dark"] .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
 /* tooltip */
-#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:320px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
-#tip b{display:block;margin-bottom:2px}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
+#tip b{display:block;margin-bottom:2px;font-size:12.5px}
+#tip .td{opacity:.9;margin-bottom:6px}
+#tip dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--panel) 25%,transparent)}
+#tip dt{opacity:.65;white-space:nowrap}
+#tip dd{margin:0;font-weight:600}
+#tip .tl2{margin-top:6px;font-size:11px;opacity:.6;text-transform:uppercase;letter-spacing:.05em}
 .scrim{display:none}
 .k6{grid-template-columns:repeat(6,minmax(0,1fr))}
 .z5{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -792,7 +797,10 @@ const tip=$("tip");
 document.addEventListener("mouseover",e=>{
   const el=e.target.closest("[data-code]"); if(!el){tip.style.opacity=0;return;}
   const code=el.dataset.code, c=BY[code], k=KN_BY[code];
-  if(c) tip.innerHTML=`<b>${code} · ${esc(c.name)}</b>${esc(c.desc)}${c.status?`<br><span style="opacity:.75">${esc(c.layer)} · ${esc(c.status)}</span>`:""}`;
+  if(c){
+    const rows=[["Loại",c.type],["Vùng mạng",c.zone],["Công nghệ",c.tech],["Mức",c.lvl],["Trạng thái",c.status]].filter(r=>r[1]);
+    tip.innerHTML=`<b>${code} · ${esc(c.name)}</b><div class="td">${esc(c.desc)}</div><dl>${rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl><div class="tl2">${esc(c.layer)}</div>`;
+  }
   else if(k) tip.innerHTML=`<b>${code} · ${esc(k.what)}</b>${esc(k.src)} → ${esc(k.dst)}<br><span style="opacity:.75">${esc(k.how)}</span>`;
   else return;
   tip.style.opacity=1;
