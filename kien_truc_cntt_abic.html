@@ -220,6 +220,11 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 .qno span{width:20px;height:20px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-size:11px}
 .arch.hl .an{opacity:.3}
 .arch.hl .an.on{opacity:1;box-shadow:0 0 0 2px var(--lc);transform:translateY(-1px)}
+abbr.gl{text-decoration:underline dotted color-mix(in srgb,var(--brand) 55%,transparent);text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:help}
+abbr.gl:hover{background:var(--brand-soft);border-radius:3px}
+.cns{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:5px}
+.cn{white-space:nowrap;font-size:12.5px;color:var(--ink-2)}
+.cn .c{margin-right:2px}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px;font-size:12.5px}
@@ -432,6 +437,18 @@ const KN = [
 const KN_ALL = KN.flatMap(([g,rows])=>rows.map(r=>({g,code:r[0],src:r[1],dst:r[2],what:r[3],how:r[4],kind:r[5]})));
 const KN_BY = Object.fromEntries(KN_ALL.map(k=>[k.code,k]));
 
+/* ========== THUẬT NGỮ (1.5) ========== */
+const GLOSS = [
+    ["API","Giao diện lập trình để các hệ thống gọi nhau"],["AQ","Oracle Advanced Queuing — hàng đợi trong CSDL Oracle"],
+    ["Bảng chờ","Bảng trong CSDL chứa việc chờ xử lý; dịch vụ nền quét lấy việc, báo kết quả bằng thủ tục"],
+    ["Banca","Bán bảo hiểm qua ngân hàng"],["BACT","Sản phẩm Bảo an chủ thẻ, kênh banca"],["CSDL","Cơ sở dữ liệu"],
+    ["Data Guard","Công nghệ Oracle duy trì CSDL dự phòng"],["DB link","Liên kết cho phép CSDL này truy vấn, ghi sang CSDL khác"],
+    ["Engine WF","Bộ điều phối quy trình tự động chạy trong CSDL (PHT_QT_XL)"],["GCN","Giấy chứng nhận bảo hiểm"],
+    ["GoldenGate","Công nghệ Oracle nhân bản dữ liệu liên tục"],["HĐĐT","Hóa đơn điện tử"],
+    ["HSM","Thiết bị bảo mật phần cứng lưu khóa và thực hiện ký số"],["OIDC","OpenID Connect — chuẩn đăng nhập một lần"],
+    ["Phí bù FTP","Phí bù vốn điều chuyển (Fund Transfer Pricing) Agribank tính cho chi nhánh"],["SSO","Đăng nhập một lần"],
+    ["Webhook","Hệ thống bên ngoài chủ động gọi vào để báo sự kiện"],["ZNS","Zalo Notification Service — tin thông báo qua Zalo"]];
+
 /* ========== HELPERS ========== */
 const esc = s => String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 // Biến mã thành phần / kết nối trong văn bản thành chip có tooltip
@@ -457,6 +474,19 @@ function table(head, rows, opts={}){
   }</tbody></table></div>`;
 }
 const T = (head, rows, opts) => table(head, rows.map(r=>r.map(c=>L(c))), opts);
+// Mã kèm tên vắn tắt (dùng khi thuyết trình)
+const SHORT = {TB01:"Nghiệp vụ bảo hiểm",TB02:"Tài chính kế toán",TB20:"Web bán hàng",NG01:"Agribank thu phí",NG02:"Agribank TT dữ liệu",NG03:"Agribank web banca",NG05:"JETPAY, SmartMoney",NG10:"Google Workspace",NV09:"KtKySo"};
+const shortName = c => SHORT[c] || (BY[c] ? BY[c].name.replace(/ \(VB6\)/,"") : "");
+function LN(str){
+  // mở rộng dải mã (vd NG08–NG10) thành từng mã
+  str=str.replace(/\b([A-Z]{2})(\d{2})–\1(\d{2})\b/g,(_,p,a,b)=>{const o=[];for(let i=+a;i<=+b;i++)o.push(p+String(i).padStart(2,"0"));return o.join(", ");});
+  return str.split(/,\s*/).map(item=>{
+    const m=item.match(/^(ND|TB|TH|NV|DL|HT|NG)(\d{2})(?:\s.*)?$/);
+    if(!m || item.includes("–")) return `<span class="cn">${L(item)}</span>`;
+    const code=m[1]+m[2], nm=shortName(code);
+    return `<span class="cn">${BY[code]?L(code):`<span class="c" style="cursor:default;opacity:.7">${code}</span>`}${nm?` <span>${esc(nm)}</span>`:""}</span>`;
+  }).join("");
+}
 const card = (title, body, tag) => `<div class="card">${title?`<h2>${esc(title)}${tag?` <span class="tag">${esc(tag)}</span>`:""}</h2>`:""}${body}</div>`;
 const ul = items => `<ul class="clean">${items.map(i=>`<li>${L(i)}</li>`).join("")}</ul>`;
 const node = code => { const c=BY[code]; return `<span class="node${c&&c.status!=="Vận hành"?' dim':''}" data-code="${code}"><b>${code}</b>${esc(c?c.name.replace(/ \(VB6\)/,''):'')}</span>`; };
@@ -555,16 +585,7 @@ const SECTIONS = [
     "Trạng thái thành phần: Vận hành · Thí điểm · Đang xây dựng · Chuyển vào ClosedAPI · Độc lập.",
     "Mức quan trọng 1–5, 5 là cao nhất.",
     "Trình bày theo các góc nhìn của ISO/IEC/IEEE 42010 và bốn miền kiến trúc TOGAF: nghiệp vụ, ứng dụng, dữ liệu, công nghệ."]))}
-  ${card("1.5 Thuật ngữ",T(["Thuật ngữ","Nghĩa"],[
-    ["API","Giao diện lập trình để các hệ thống gọi nhau"],["AQ","Oracle Advanced Queuing — hàng đợi trong CSDL Oracle"],
-    ["Bảng chờ","Bảng trong CSDL chứa việc chờ xử lý; dịch vụ nền quét lấy việc, báo kết quả bằng thủ tục"],
-    ["Banca","Bán bảo hiểm qua ngân hàng"],["BACT","Sản phẩm Bảo an chủ thẻ, kênh banca"],["CSDL","Cơ sở dữ liệu"],
-    ["Data Guard","Công nghệ Oracle duy trì CSDL dự phòng"],["DB link","Liên kết cho phép CSDL này truy vấn, ghi sang CSDL khác"],
-    ["Engine WF","Bộ điều phối quy trình tự động chạy trong CSDL (PHT_QT_XL)"],["GCN","Giấy chứng nhận bảo hiểm"],
-    ["GoldenGate","Công nghệ Oracle nhân bản dữ liệu liên tục"],["HĐĐT","Hóa đơn điện tử"],
-    ["HSM","Thiết bị bảo mật phần cứng lưu khóa và thực hiện ký số"],["OIDC","OpenID Connect — chuẩn đăng nhập một lần"],
-    ["Phí bù FTP","Phí bù vốn điều chuyển (Fund Transfer Pricing) Agribank tính cho chi nhánh"],["SSO","Đăng nhập một lần"],
-    ["Webhook","Hệ thống bên ngoài chủ động gọi vào để báo sự kiện"],["ZNS","Zalo Notification Service — tin thông báo qua Zalo"]],{max:420}))}
+  ${card("1.5 Thuật ngữ",T(["Thuật ngữ","Nghĩa"],GLOSS,{max:420}).replace('class="tbl-wrap"','class="tbl-wrap no-gl"'))}
   </div>`;}},
 { id:"context", num:"2", group:"Nội dung", title:"Bối cảnh", render(){ return `
   <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Người sử dụng, đối tác và nhà cung cấp kết nối vào qua các kênh dưới đây.</p>
@@ -619,7 +640,7 @@ const SECTIONS = [
   const MOD=[["Bảo hiểm gốc — hợp đồng, bồi thường, banca, GCN","BH_ · PBH_",559,1396],["Hạ tầng dùng chung — quyền, hàng đợi, email, SMS, quy trình tự động","HT_ · PHT_",61,60],["Tái bảo hiểm","TBH_ · PTBH_",59,147],["Kế toán tổng hợp, ký số chứng từ","KT_ · PKT_ · BKT_",47,190],["Khách hàng","KH_ · PKH_",32,90],["Hợp đồng dùng chung","HD_ · PHD_",28,94],["Báo cáo tổng hợp","BC_ · PBC_",21,73]];
   const bar=(v,m)=>`<div class="bar"><div class="t"><i style="width:${v/m*100}%"></i></div><span>≈${v.toLocaleString("vi-VN")}</span></div>`;
   return `
-  ${card("4.1 Bản đồ năng lực",`<div class="grid g4">${CAP.map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${esc(i[0])}<div>${L(i[1])}</div></div>`).join("")}</div>`).join("")}</div>`,"12 nhóm")}
+  ${card("4.1 Bản đồ năng lực",`<div class="grid g4">${CAP.map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${esc(i[0])}<div class="cns">${LN(i[1])}</div></div>`).join("")}</div>`).join("")}</div>`,"12 nhóm")}
   <div class="grid g2" style="grid-template-columns:3fr 2fr">
   ${card("4.2 Phân hệ nghiệp vụ lõi",`<p style="margin:0 0 12px;color:var(--ink-2)">Nghiệp vụ lõi (${L("NV01")}) gồm các phân hệ trong schema KT_ABIC, nhận diện theo tiền tố tên đối tượng.</p>`+
     table(["Phân hệ","Tiền tố","Bảng","Thủ tục"],MOD.map(m=>[esc(m[0]),`<span class="mono">${m[1]}</span>`,bar(m[2],559),bar(m[3],1396)]),{codeCol:false})+
@@ -754,9 +775,10 @@ const SECTIONS = [
   const draw=()=>{
     const qq=q.toLowerCase();
     const rows=COMP.filter(c=>(layer==="Tất cả"||c.layer===layer)&&(!qq||Object.values(c).join(" ").toLowerCase().includes(qq)));
-    document.getElementById("tA").innerHTML = table(["Mã","Tên","Lớp","Loại","Vùng mạng","Công nghệ","Mức","Trạng thái","Mô tả"],
+    const tA=document.getElementById("tA"); tA.innerHTML = table(["Mã","Tên","Lớp","Loại","Vùng mạng","Công nghệ","Mức","Trạng thái","Mô tả"],
       rows.map(c=>[`<span class="c" data-code="${c.code}">${c.code}</span>`,`<b>${esc(c.name)}</b>`,esc(c.layer),esc(c.type),esc(c.zone||"—"),esc(c.tech||"—"),lvl(c.lvl),badge(c.status),esc(c.desc)]),{max:640})
       +`<div class="note" style="padding:0 14px 12px">${rows.length} / ${COMP.length} thành phần</div>`;
+    glossify(tA);
   };
   document.querySelectorAll("#fA .pill").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fA .pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");layer=b.dataset.l;draw();});
   const qi=document.getElementById("qA"); qi.oninput=()=>{q=qi.value;draw();};
@@ -775,9 +797,10 @@ const SECTIONS = [
   const draw=()=>{
     const qq=q.toLowerCase();
     const rows=KN_ALL.filter(k=>(!g||k.g===g)&&(!qq||Object.values(k).join(" ").toLowerCase().includes(qq)));
-    document.getElementById("tB").innerHTML = table(["Mã","Nguồn","Đích","Nội dung","Cơ chế, giao thức","Kiểu"],
+    const tB=document.getElementById("tB"); tB.innerHTML = table(["Mã","Nguồn","Đích","Nội dung","Cơ chế, giao thức","Kiểu"],
       rows.map(k=>[k.code,L(k.src),L(k.dst),esc(k.what),esc(k.how),`<span class="b ${k.kind.startsWith("Đồng")?"ok":k.kind.startsWith("Bất")?"info":k.kind.startsWith("Theo")?"warn":"mute"}">${esc(k.kind)}</span>`]),{max:640})
       +`<div class="note" style="padding:0 14px 12px">${rows.length} / ${KN_ALL.length} kết nối</div>`;
+    glossify(tB);
   };
   document.querySelectorAll("#fB .pill").forEach(b=>b.onclick=()=>{document.querySelectorAll("#fB .pill").forEach(x=>x.classList.remove("on"));b.classList.add("on");g=b.dataset.g;draw();});
   const qi=document.getElementById("qB"); qi.oninput=()=>{q=qi.value;draw();};
@@ -798,6 +821,29 @@ const SECTIONS = [
     ["Accounting","NV01 (KT_, VT_, TT_…); TB02",""],["ETL","GoldenGate; DB link",""],["Data mart","R_ABIC trong DL02",""],
     ["Data lake","—","Chưa có"],["BI","TB25 Power BI",""],["Trao đổi file (SFTP)","Nhập file thủ công","Đối soát trung gian thanh toán"]],{codeCol:false}))}`;}},
 ];
+
+/* Gắn tooltip nghĩa cho các thuật ngữ ở mục 1.5 */
+const GL_MAP = Object.fromEntries(GLOSS.map(([t,m])=>[t.toLowerCase(),[t,m]]));
+const GL_RE = new RegExp("(?<![\\p{L}\\p{N}_])(" + GLOSS.map(g=>g[0]).sort((a,b)=>b.length-a.length)
+  .map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/ /g,"\\s+")).join("|") + ")(?![\\p{L}\\p{N}_])","giu");
+const GL_SKIP = ".cn,[data-code],[data-term],.no-gl,th,input,button,script,style,#tip,.kt,h1";
+function glossify(root){
+  if(!root) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>
+    !n.nodeValue.trim()||n.parentElement.closest(GL_SKIP)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+  const nodes=[]; while(w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n=>{
+    const t=n.nodeValue; GL_RE.lastIndex=0; if(!GL_RE.test(t)) return;
+    const f=document.createDocumentFragment(); let last=0; GL_RE.lastIndex=0; let m;
+    while((m=GL_RE.exec(t))){
+      f.append(t.slice(last,m.index));
+      const key=m[1].replace(/\s+/g," ").toLowerCase();
+      const a=document.createElement("abbr"); a.className="gl"; a.dataset.term=GL_MAP[key][0]; a.textContent=m[1];
+      f.append(a); last=m.index+m[1].length;
+    }
+    f.append(t.slice(last)); n.replaceWith(f);
+  });
+}
 
 /* ========== ĐIỀU HƯỚNG ========== */
 let CUR = 0, PENDING = "";
@@ -821,6 +867,7 @@ function go(i){
   $("content").innerHTML=`<section>${s.render()}</section>`;
   $("content").scrollTop=0;
   s.mount && s.mount();
+  glossify($("content"));
   try{ history.replaceState(null,"","#"+s.id); }catch(e){}
 }
 $("prev").onclick=()=>go(CUR-1);
@@ -845,6 +892,8 @@ try{ const t=localStorage.getItem("abic-theme"); if(t) document.documentElement.
 // Tooltip + bấm mã để mở danh mục
 const tip=$("tip");
 document.addEventListener("mouseover",e=>{
+  const g=e.target.closest("[data-term]");
+  if(g){ const [t,m]=GL_MAP[g.dataset.term.toLowerCase()]; tip.innerHTML=`<b>${esc(t)}</b><div class="td" style="margin:0">${esc(m)}</div><div class="tl2">Thuật ngữ · mục 1.5</div>`; tip.style.opacity=1; return; }
   const el=e.target.closest("[data-code]"); if(!el){tip.style.opacity=0;return;}
   const code=el.dataset.code, c=BY[code], k=KN_BY[code];
   if(c){
