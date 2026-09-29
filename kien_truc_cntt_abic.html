@@ -539,6 +539,17 @@ const SECTIONS = [
   const stTotal = Object.values(st).reduce((a,b)=>a+b,0);
   return `
   <p class="lead">Hệ thống thông tin ABIC tập trung quanh CSDL giao dịch Oracle. Nghiệp vụ lõi là thủ tục PL/SQL trong CSDL; người sử dụng, đối tác và nhà cung cấp kết nối qua ClosedAPI, OpenAPI và API kênh Agribank. Di chuột lên mã thành phần để xem mô tả, bấm để mở danh mục.</p>
+  <div class="grid g4 kpi-row">${kpis.map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
+  ${card("Bức tranh hệ thống",archMap+`<p class="note">Chỉ thể hiện thành phần tiêu biểu; danh sách đầy đủ ở Phụ lục A. Di chuột lên thành phần để xem mô tả, bấm để mở danh mục.</p>`,"Luồng từ trái sang phải")}
+  <div class="grid g2">
+      ${card("Trạng thái thành phần",Object.entries(st).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;margin-bottom:4px">${badge(k)}<span class="mono">${v}</span></div><div class="bar" style="grid-template-columns:1fr"><div class="t"><i style="width:${v/stTotal*100}%"></i></div></div></div>`).join(""))}
+      ${card("Mốc sắp tới",`<div class="tl">
+        <div class="ev"><div class="d">01/10/2026</div><div class="n">Chạy song song hạ tầng mới</div><div class="x">35 ứng dụng sang 18 máy chủ theo vùng</div></div>
+        <div class="ev"><div class="d">15/10/2026</div><div class="n">Whitelist IP đối tác</div><div class="x">Tường lửa và API cho OpenAPI</div></div>
+        <div class="ev"><div class="d">10/2026</div><div class="n">SSO toàn bộ</div><div class="x">Kể cả ứng dụng VB6</div></div>
+        <div class="ev"><div class="d">30/10/2026</div><div class="n">Hoàn tất di dời · ClosedAPI nhóm đầu</div><div class="x">Đóng cổng Internet cũ, bắt buộc VPN</div></div>
+      </div>`)}
+  </div>
   <div class="grid g2 keys">
     <div class="card key" data-hl="TH02,TH03,TH05">
       <div class="kh"><span class="kn">1</span><div><div class="kt">Điểm then chốt</div><h3>Mỗi nhóm đối tượng vào qua một cổng API riêng</h3></div></div>
@@ -560,17 +571,6 @@ const SECTIONS = [
       </div>
       <div class="qno"><span>✕</span> CSDL không gọi HTTP, không gửi email trực tiếp ra ngoài</div>
     </div>
-  </div>
-  <div class="grid g4 kpi-row">${kpis.map(k=>`<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("")}</div>
-  ${card("Bức tranh hệ thống",archMap+`<p class="note">Chỉ thể hiện thành phần tiêu biểu; danh sách đầy đủ ở Phụ lục A. Di chuột lên thành phần để xem mô tả, bấm để mở danh mục.</p>`,"Luồng từ trái sang phải")}
-  <div class="grid g2">
-      ${card("Trạng thái thành phần",Object.entries(st).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;margin-bottom:4px">${badge(k)}<span class="mono">${v}</span></div><div class="bar" style="grid-template-columns:1fr"><div class="t"><i style="width:${v/stTotal*100}%"></i></div></div></div>`).join(""))}
-      ${card("Mốc sắp tới",`<div class="tl">
-        <div class="ev"><div class="d">01/10/2026</div><div class="n">Chạy song song hạ tầng mới</div><div class="x">35 ứng dụng sang 18 máy chủ theo vùng</div></div>
-        <div class="ev"><div class="d">15/10/2026</div><div class="n">Whitelist IP đối tác</div><div class="x">Tường lửa và API cho OpenAPI</div></div>
-        <div class="ev"><div class="d">10/2026</div><div class="n">SSO toàn bộ</div><div class="x">Kể cả ứng dụng VB6</div></div>
-        <div class="ev"><div class="d">30/10/2026</div><div class="n">Hoàn tất di dời · ClosedAPI nhóm đầu</div><div class="x">Đóng cổng Internet cũ, bắt buộc VPN</div></div>
-      </div>`)}
   </div>
   ${card("Đặc điểm chính",ul([
     "Nghiệp vụ lõi (bảo hiểm gốc, đồng và tái bảo hiểm, kế toán) là thủ tục PL/SQL trong CSDL giao dịch. Engine WF điều phối quy trình tự động ngay trong CSDL.",
