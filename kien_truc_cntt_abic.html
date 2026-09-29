@@ -225,6 +225,7 @@ abbr.gl:hover{background:var(--brand-soft);border-radius:3px}
 .cns{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:5px}
 .cn{white-space:nowrap;font-size:12.5px;color:var(--ink-2)}
 .cn .c{margin-right:2px}
+.cnm{color:var(--ink);font-weight:500}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px;font-size:12.5px}
@@ -453,8 +454,21 @@ const GLOSS = [
 const esc = s => String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 // Biến mã thành phần / kết nối trong văn bản thành chip có tooltip
 const CODE_RE = /\b(ND|TB|TH|NV|DL|HT|NG|KN)(\d{2})\b/g;
-function L(s){
-  return esc(s).replace(CODE_RE,(m)=> (BY[m]||KN_BY[m]) ? `<span class="c" data-code="${m}">${m}</span>` : m);
+// names=true: thêm tên vắn tắt sau mã thành phần, trừ khi tên đã nằm ngay cạnh mã
+function L(s, names=true){
+  return esc(s).replace(CODE_RE,(m,_p,_n,off,str)=>{
+    if(!(BY[m]||KN_BY[m])) return m;
+    const chip=`<span class="c" data-code="${m}">${m}</span>`;
+    if(!names || !BY[m]) return chip;
+    const before=str.slice(0,off).trimEnd(), after=str.slice(off+m.length);
+    const next=after.trimStart();
+    if(before.endsWith("–") || next.startsWith("–")) return chip;          // dải mã
+    if(before.endsWith("(") && next.startsWith(")")) return chip;          // "Tên (MÃ)"
+    const first=w=>(w||"").split(/\s+/)[0].toLowerCase();
+    const nw=first(next);
+    if(nw && (nw===first(shortName(m)) || nw===first(BY[m].name))) return chip; // "MÃ Tên"
+    return `${chip}<span class="cnm"> ${esc(shortName(m))}</span>`;
+  });
 }
 function badge(st){
   if(!st) return "";
@@ -473,7 +487,7 @@ function table(head, rows, opts={}){
     rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===0&&opts.codeCol!==false?' class="code"':''}>${c}</td>`).join("")}</tr>`).join("")
   }</tbody></table></div>`;
 }
-const T = (head, rows, opts) => table(head, rows.map(r=>r.map(c=>L(c))), opts);
+const T = (head, rows, opts) => table(head, rows.map(r=>r.map((c,i)=>L(c, !(i===0 && /^[A-Z]{2}\d{2}$/.test(c))))), opts);
 // Mã kèm tên vắn tắt (dùng khi thuyết trình)
 const SHORT = {TB01:"Nghiệp vụ bảo hiểm",TB02:"Tài chính kế toán",TB20:"Web bán hàng",NG01:"Agribank thu phí",NG02:"Agribank TT dữ liệu",NG03:"Agribank web banca",NG05:"JETPAY, SmartMoney",NG10:"Google Workspace",NV09:"KtKySo"};
 const shortName = c => SHORT[c] || (BY[c] ? BY[c].name.replace(/ \(VB6\)/,"") : "");
@@ -484,7 +498,7 @@ function LN(str){
     const m=item.match(/^(ND|TB|TH|NV|DL|HT|NG)(\d{2})(?:\s.*)?$/);
     if(!m || item.includes("–")) return `<span class="cn">${L(item)}</span>`;
     const code=m[1]+m[2], nm=shortName(code);
-    return `<span class="cn">${BY[code]?L(code):`<span class="c" style="cursor:default;opacity:.7">${code}</span>`}${nm?` <span>${esc(nm)}</span>`:""}</span>`;
+    return `<span class="cn">${BY[code]?L(code,false):`<span class="c" style="cursor:default;opacity:.7">${code}</span>`}${nm?` <span>${esc(nm)}</span>`:""}</span>`;
   }).join("");
 }
 const card = (title, body, tag) => `<div class="card">${title?`<h2>${esc(title)}${tag?` <span class="tag">${esc(tag)}</span>`:""}</h2>`:""}${body}</div>`;
@@ -530,9 +544,9 @@ const SECTIONS = [
       <div class="kh"><span class="kn">1</span><div><div class="kt">Điểm then chốt</div><h3>Mỗi nhóm đối tượng vào qua một cổng API riêng</h3></div></div>
       <p>${L("ClosedAPI là cổng dữ liệu nội bộ; OpenAPI là cổng cho đối tác và kênh số; kênh Agribank có API riêng đặt tại DC Agribank.")}</p>
       <div class="gates">
-        <div class="gate"><div class="gw">Ứng dụng nội bộ, dịch vụ nền</div><div class="ga"></div><div class="gn"><b>ClosedAPI</b>${L("TH02")}<small>Cổng dữ liệu nội bộ · cửa duy nhất vào CSDL</small></div></div>
-        <div class="gate"><div class="gw">Đối tác, kênh số</div><div class="ga"></div><div class="gn"><b>OpenAPI</b>${L("TH03")}<small>Vùng Internet · whitelist IP</small></div></div>
-        <div class="gate"><div class="gw">Kênh Agribank</div><div class="ga"></div><div class="gn"><b>API kênh Agribank</b>${L("TH04")} ${L("TH05")}<small>Đặt tại DC Agribank</small></div></div>
+        <div class="gate"><div class="gw">Ứng dụng nội bộ, dịch vụ nền</div><div class="ga"></div><div class="gn"><b>ClosedAPI</b>${L("TH02",false)}<small>Cổng dữ liệu nội bộ · cửa duy nhất vào CSDL</small></div></div>
+        <div class="gate"><div class="gw">Đối tác, kênh số</div><div class="ga"></div><div class="gn"><b>OpenAPI</b>${L("TH03",false)}<small>Vùng Internet · whitelist IP</small></div></div>
+        <div class="gate"><div class="gw">Kênh Agribank</div><div class="ga"></div><div class="gn"><b>API kênh Agribank</b>${L("TH04",false)} ${L("TH05",false)}<small>Đặt tại DC Agribank</small></div></div>
       </div>
     </div>
     <div class="card key" data-hl="NV01,NV02,DL01,NV03,NV04,NV06,TH02">
@@ -541,7 +555,7 @@ const SECTIONS = [
       <div class="qflow">
         <div class="qs"><b>CSDL</b><small>Nghiệp vụ ghi việc</small></div><div class="ga"></div>
         <div class="qs"><b>Bảng chờ, hàng đợi</b><small>SMS, email, Zalo, HĐĐT, ký số</small></div><div class="ga"></div>
-        <div class="qs"><b>Dịch vụ nền, API</b><small>${L("NV03")} ${L("NV04")} ${L("NV06")} ${L("TH02")}</small></div><div class="ga"></div>
+        <div class="qs"><b>Dịch vụ nền, API</b><small>${L("NV03",false)} ${L("NV04",false)} ${L("NV06",false)} ${L("TH02",false)}</small></div><div class="ga"></div>
         <div class="qs"><b>Hệ thống ngoài</b><small>Kết quả báo lại bằng thủ tục</small></div>
       </div>
       <div class="qno"><span>✕</span> CSDL không gọi HTTP, không gửi email trực tiếp ra ngoài</div>
@@ -608,7 +622,7 @@ const SECTIONS = [
     ["Thanh toán",[["NG04","VNPAY","Thanh toán trực tuyến; báo kết quả qua webhook; cung cấp file đối soát"],["NG05","JETPAY, SmartMoney","Thanh toán trực tuyến"]]],
     ["Dịch vụ số",[["NG06","Hilo","Hóa đơn điện tử"],["NG07","Viettel CA","Chứng thư số"],["NG08","Viettel SMS","Tin nhắn"],["NG09","Zalo OA","Thông báo ZNS"],["NG10","Google Workspace","Email"],["NG11","URBOX","Voucher, quà tặng"],["NG13","Base","Quản lý công việc, đồng bộ với văn phòng điện tử"],["NG14","AICycle","Danh mục xe"]]],
     ["Độc lập",[["NG12","MISA","Nhân sự, tiền lương; không tích hợp"]]]
-  ].map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${L(i[0])} <b>${esc(i[1])}</b><div style="color:var(--ink-2);font-size:12.5px">${esc(i[2])}</div></div>`).join("")}</div>`).join("")}</div>`)}
+  ].map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${L(i[0],false)} <b>${esc(i[1])}</b><div style="color:var(--ink-2);font-size:12.5px">${esc(i[2])}</div></div>`).join("")}</div>`).join("")}</div>`)}
   `;}},
 { id:"principles", num:"3", group:"Nội dung", title:"Nguyên tắc kiến trúc", render(){
   const P=[
@@ -642,14 +656,14 @@ const SECTIONS = [
   return `
   ${card("4.1 Bản đồ năng lực",`<div class="grid g4">${CAP.map(([g,items])=>`<div class="zone cap"><h3>${g}</h3>${items.map(i=>`<div class="it">${esc(i[0])}<div class="cns">${LN(i[1])}</div></div>`).join("")}</div>`).join("")}</div>`,"12 nhóm")}
   <div class="grid g2" style="grid-template-columns:3fr 2fr">
-  ${card("4.2 Phân hệ nghiệp vụ lõi",`<p style="margin:0 0 12px;color:var(--ink-2)">Nghiệp vụ lõi (${L("NV01")}) gồm các phân hệ trong schema KT_ABIC, nhận diện theo tiền tố tên đối tượng.</p>`+
+  ${card("4.2 Phân hệ nghiệp vụ lõi",`<p style="margin:0 0 12px;color:var(--ink-2)">Nghiệp vụ lõi (${L("NV01",false)}) gồm các phân hệ trong schema KT_ABIC, nhận diện theo tiền tố tên đối tượng.</p>`+
     table(["Phân hệ","Tiền tố","Bảng","Thủ tục"],MOD.map(m=>[esc(m[0]),`<span class="mono">${m[1]}</span>`,bar(m[2],559),bar(m[3],1396)]),{codeCol:false})+
     `<p class="note">Toàn schema: <b>1.107 bảng · 111 package · 2.517 procedure · 438 function</b>. Phần lớn các tiền tố còn lại (TT_ tiền tệ, PTS_, PSE_, PTA_, PCD_…) thuộc các phân hệ kế toán.</p>`)}
   ${card("4.3 Quy trình tự động",`<ol class="flow">
-    <li>Engine WF (${L("NV02")}) chạy các quy trình nhiều bước theo định nghĩa khai báo.</li>
+    <li>Engine WF (${L("NV02",false)}) chạy các quy trình nhiều bước theo định nghĩa khai báo.</li>
     <li>Mỗi bước gọi thủ tục nghiệp vụ qua hàng đợi AQ.</li>
     <li>Bước chờ điều kiện được hoãn và thử lại theo lịch.</li>
-    <li>Bước lỗi sinh sự cố để người dùng xử lý trên Dashboard WF (${L("TB11")}).</li></ol>
+    <li>Bước lỗi sinh sự cố để người dùng xử lý trên Dashboard WF (${L("TB11",false)}).</li></ol>
     <div class="callout" style="margin-top:14px">Quy trình đang chạy: kiểm soát, xuất hóa đơn, hạch toán hợp đồng theo nghiệp vụ và kênh (kênh trực tuyến, Bảo an chủ thẻ, xe cơ giới…); ký số chứng từ kế toán.</div>`)}
   </div>`;
 }},
@@ -688,10 +702,10 @@ const SECTIONS = [
     ["Nhập file","File tải từ đối tác, nhập vào bảng trung gian","Đối soát trung gian thanh toán","KN50"]],{codeCol:false}))}
   <h2 style="margin-top:22px">6.2 Cổng tích hợp</h2>
   <div class="grid g4">
-    ${card("","<h3>"+L("TH02")+" ClosedAPI</h3>"+ul(["Cổng dữ liệu nội bộ: REST/JSON; gọi thủ tục KT_ABIC qua thư viện KnOracle.","Xác thực client: APIKey cấp theo thiết bị, kiểm cùng địa chỉ IP, đối tác, nhóm quyền trong CSDL. Người dùng đăng nhập nhận phiên SessionID.","Nhóm chức năng: bảo hiểm, bán hàng, banca, báo cáo, CMS, kho file, ký số, quy trình tự động, tiện ích (email, SMS, OCR, tìm kiếm), tích hợp ngoài.","Kiêm tích hợp ra ngoài: Agribank (thu hộ qua QR, OAuth2), Zalo ZNS, URBOX, AICycle, Elastic."]))}
-    ${card("","<h3>"+L("TH03")+" OpenAPI</h3>"+ul(["Cổng cho đối tác và kênh số ở vùng Internet, giới hạn theo IP đối tác.","Chuyển tiếp webhook sang ClosedAPI.","Phần truy cập CSDL còn lại đang chuyển sang ClosedAPI."]))}
-    ${card("","<h3>"+L("TH04")+" "+L("TH05")+" API kênh Agribank</h3>"+ul(["Đặt trên máy chủ API tại vùng ngoài DC Agribank.","OpenAPI Banca, NHNo API gọi thủ tục API_BANCA: tạo đơn, xác nhận thanh toán, tra cứu hợp đồng.","NHNo API trao đổi với hệ thống thu phí Agribank bằng SOAP, ISO 8583.","Trung tâm quản lý dữ liệu Agribank gọi API hằng ngày lấy dữ liệu phí bù FTP."]))}
-    ${card("","<h3>"+L("TH01")+" SSO</h3>"+ul(["IdentityServer, OIDC; đăng nhập một lần cho ứng dụng của người dùng nội bộ và Người bán, gồm cả VB6."]))}
+    ${card("","<h3>"+L("TH02",false)+" ClosedAPI</h3>"+ul(["Cổng dữ liệu nội bộ: REST/JSON; gọi thủ tục KT_ABIC qua thư viện KnOracle.","Xác thực client: APIKey cấp theo thiết bị, kiểm cùng địa chỉ IP, đối tác, nhóm quyền trong CSDL. Người dùng đăng nhập nhận phiên SessionID.","Nhóm chức năng: bảo hiểm, bán hàng, banca, báo cáo, CMS, kho file, ký số, quy trình tự động, tiện ích (email, SMS, OCR, tìm kiếm), tích hợp ngoài.","Kiêm tích hợp ra ngoài: Agribank (thu hộ qua QR, OAuth2), Zalo ZNS, URBOX, AICycle, Elastic."]))}
+    ${card("","<h3>"+L("TH03",false)+" OpenAPI</h3>"+ul(["Cổng cho đối tác và kênh số ở vùng Internet, giới hạn theo IP đối tác.","Chuyển tiếp webhook sang ClosedAPI.","Phần truy cập CSDL còn lại đang chuyển sang ClosedAPI."]))}
+    ${card("","<h3>"+L("TH04",false)+" "+L("TH05",false)+" API kênh Agribank</h3>"+ul(["Đặt trên máy chủ API tại vùng ngoài DC Agribank.","OpenAPI Banca, NHNo API gọi thủ tục API_BANCA: tạo đơn, xác nhận thanh toán, tra cứu hợp đồng.","NHNo API trao đổi với hệ thống thu phí Agribank bằng SOAP, ISO 8583.","Trung tâm quản lý dữ liệu Agribank gọi API hằng ngày lấy dữ liệu phí bù FTP."]))}
+    ${card("","<h3>"+L("TH01",false)+" SSO</h3>"+ul(["IdentityServer, OIDC; đăng nhập một lần cho ứng dụng của người dùng nội bộ và Người bán, gồm cả VB6."]))}
   </div>
   ${card("6.3 Tích hợp với hệ thống ngoài",T(["Hệ thống","Nghiệp vụ","Cơ chế","Thành phần ABIC","Kết nối"],[
     ["NG01 Agribank — thu phí","Thu phí, thu hộ Bảo an chủ thẻ, thu hộ qua QR","SOAP, ISO 8583 qua NHNo API; REST, OAuth2 qua ClosedAPI; BACT Service","TH05, TH02, NV10","KN25, KN27, KN48"],
@@ -826,7 +840,7 @@ const SECTIONS = [
 const GL_MAP = Object.fromEntries(GLOSS.map(([t,m])=>[t.toLowerCase(),[t,m]]));
 const GL_RE = new RegExp("(?<![\\p{L}\\p{N}_])(" + GLOSS.map(g=>g[0]).sort((a,b)=>b.length-a.length)
   .map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/ /g,"\\s+")).join("|") + ")(?![\\p{L}\\p{N}_])","giu");
-const GL_SKIP = ".cn,[data-code],[data-term],.no-gl,th,input,button,script,style,#tip,.kt,h1";
+const GL_SKIP = ".cn,.cnm,[data-code],[data-term],.no-gl,th,input,button,script,style,#tip,.kt,h1";
 function glossify(root){
   if(!root) return;
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>
