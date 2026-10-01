@@ -240,6 +240,9 @@ abbr.gl:hover{background:var(--brand-soft);border-radius:3px}
 .rm .ico{fill:var(--lc);font-size:18px;font-weight:700}
 .rm .edge{stroke:var(--ink-2);stroke-width:1.6;fill:none}
 .rm .mk{fill:var(--ink-2)}
+.rm .edge.dash{stroke-dasharray:7 5}
+.rm .div{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 4}
+.rm .sub{fill:var(--ink-3);font-size:11px;font-weight:700;letter-spacing:.08em}
 .rm g[data-code]{cursor:pointer}
 .rm g.rk:hover .box{stroke-width:2.6}
 /* tooltip */
@@ -598,58 +601,70 @@ const SECTIONS = [
   /* Cấu hình sơ đồ (toạ độ trên khung 1600×880). Sửa nội dung ở đây.
      k = màu theo lớp: nd người dùng · tb trình bày · th tích hợp · nv nghiệp vụ · dl dữ liệu · ng hệ thống ngoài · ht hạ tầng */
   const GROUPS = [
-    {t:"LỚP TRÌNH BÀY / NGƯỜI DÙNG",              x:30,   y:122, w:214,  h:370},
-    {t:"DỊCH VỤ NỀN & TÍCH HỢP (MICROSERVICES)",  x:512,  y:66,  w:1033, h:182},
-    {t:"LỚP TÍCH HỢP & XỬ LÝ TRUNG GIAN",         x:512,  y:280, w:512,  h:362},
-    {t:"CORE BẢO HIỂM / LỚP NGHIỆP VỤ",           x:1065, y:280, w:480,  h:362},
-    {t:"LỚP DỮ LIỆU (DATA)",                      x:512,  y:683, w:1033, h:170},
+    {t:"LỚP TRÌNH BÀY / NGƯỜI DÙNG",              x:30,   y:510, w:214,  h:360},
+    {t:"DỊCH VỤ NỀN & TÍCH HỢP (MICROSERVICES)",  x:290,  y:96,  w:1255, h:170},
+    {t:"LỚP TÍCH HỢP & XỬ LÝ TRUNG GIAN",         x:290,  y:300, w:1255, h:195},
+    {t:"LỚP TÍCH HỢP (CỔNG API)",                 x:290,  y:600, w:385,  h:190},
+    {t:"CORE BẢO HIỂM / LỚP NGHIỆP VỤ",           x:705,  y:600, w:435,  h:190},
+    {t:"LỚP DỮ LIỆU (DATA)",                      x:290,  y:820, w:1255, h:230},
+  ];
+  // Đường kẻ phụ và nhãn phụ (vd chia cột trong lớp dữ liệu)
+  const DIVIDERS = [{x1:1160, y1:835, x2:1160, y2:1035}];
+  const LABELS = [
+    {x:310,  y:846, t:"VẬN HÀNH"},
+    {x:1180, y:846, t:"BẢN SAO & DỰ PHÒNG"},
   ];
   const NODES = [
     // Người dùng
-    {k:"nd", x:46,  y:140, w:182, h:100, c:"ND01–ND02", n:"Nội bộ / Người bán",     s:"TB01, TB02, TB13, TB17"},
-    {k:"nd", x:46,  y:262, w:182, h:100, c:"ND03 · ND04", n:"Khách hàng & Agribank", s:"TB18, TB19, TB20, MyAbic"},
-    {k:"nd", x:46,  y:385, w:182, h:92,  c:"ND05", n:"Đối tác & Power BI",           s:"TB05, TB09, TB10, TB25"},
-    // Cổng
-    {k:"th", x:270, y:245, w:104, h:108, c:"TH03", n:"OpenAPI", s:"API Gateway", icon:"</>"},
-    {k:"th", x:398, y:245, w:100, h:108, c:"TH02", n:"ClosedAPI", s:"SFTP"},
+    {k:"nd", x:46,  y:530, w:182, h:100, c:"ND01–ND02", n:"Nội bộ / Người bán",     s:"TB01, TB02, TB13, TB17"},
+    {k:"nd", x:46,  y:645, w:182, h:100, c:"ND03 · ND04", n:"Khách hàng & Agribank", s:"TB18, TB19, TB20, MyAbic"},
+    {k:"nd", x:46,  y:760, w:182, h:92,  c:"ND05", n:"Đối tác & Power BI",           s:"TB05, TB09, TB10, TB25"},
+    // Hạ tầng dùng chung
+    {k:"ht", x:46,  y:900, w:182, h:91,  c:"HT01–HT02", n:"HSM / VPN", s:"Hạ tầng dùng chung"},
     // Dịch vụ nền & tích hợp
-    {k:"th", x:536,  y:96, w:152, h:117, c:"TH01", n:"SSO",      s:"Xác thực tập trung"},
-    {k:"nv", x:698,  y:96, w:152, h:117, c:"NV03", n:"SMS",      s:"SMS Service (Viettel)"},
-    {k:"nv", x:861,  y:96, w:152, h:117, c:"NV04", n:"Email",    s:"Email Service"},
-    {k:"nv", x:1024, y:96, w:152, h:117, c:"NV06", n:"eInvoice", s:"Hóa đơn điện tử"},
-    {k:"nv", x:1187, y:96, w:152, h:117, c:"NV08", n:"Ký số",    s:"Ký số HSM/Service"},
-    {k:"ng", x:1350, y:96, w:152, h:117, c:"NG14", n:"AICycle",  s:"Định giá / AI OCR"},
-    {k:"nd", x:1173, y:6,  w:180, h:46,  c:"",     n:"Khách hàng / Đối tác"},
-    // Tích hợp & xử lý trung gian
-    {k:"tb", x:536, y:289, w:141, h:73,  c:"TB03", n:"QuyTrinh", s:"Quản lý luồng"},
-    {k:"ng", x:860, y:289, w:141, h:73,  c:"NG01", n:"Agribank", s:"Thu phí / Thanh toán"},
-    {k:"th", x:536, y:385, w:465, h:56,  c:"TH05 · TH08", n:"NHNo API / BancaAPI — Cổng trung gian tích hợp", bar:true},
-    {k:"ng", x:536, y:490, w:141, h:117, c:"NG04", n:"VNPAY", s:"Cổng thanh toán\ntrực tuyến"},
-    {k:"ng", x:698, y:490, w:141, h:117, c:"NG06 · NG08 · NG09", n:"Hilo, SMS, Zalo", s:"Hilo, Viettel SMS,\nZalo OA"},
-    {k:"nv", x:860, y:490, w:141, h:117, c:"NV02", n:"Engine WF", s:"Xử lý quy trình\nnghiệp vụ"},
-    // Core bảo hiểm
-    {k:"nv", x:1097, y:306, w:180, h:117, c:"NV01", n:"Nghiệp vụ lõi", s:"Quản lý hợp đồng,\nKhách hàng & Bồi thường"},
-    {k:"tb", x:1318, y:306, w:180, h:117, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán & Quản lý\ndòng tiền"},
-    {k:"dl", x:1124, y:509, w:126, h:70,  c:"DL01", n:"CSDL Giao dịch", oval:true},
-    {k:"dl", x:1318, y:499, w:180, h:91,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
-    // Dữ liệu
-    {k:"dl", x:765,  y:735, w:180, h:91, c:"DL02", n:"CSDL Báo cáo", s:"Phục vụ Báo cáo BI"},
-    {k:"dl", x:1021, y:745, w:126, h:70, c:"DL04", n:"Kho File", oval:true},
-    {k:"ht", x:1287, y:735, w:195, h:91, c:"HT01–HT02", n:"HSM / VPN", s:"Hạ tầng dùng chung"},
+    {k:"th", x:310,  y:126, w:190, h:120, c:"TH01", n:"SSO",      s:"Xác thực tập trung"},
+    {k:"nv", x:515,  y:126, w:190, h:120, c:"NV03", n:"SMS",      s:"SMS Service (Viettel)"},
+    {k:"nv", x:720,  y:126, w:190, h:120, c:"NV04", n:"Email",    s:"Email Service"},
+    {k:"nv", x:925,  y:126, w:190, h:120, c:"NV06", n:"eInvoice", s:"Hóa đơn điện tử"},
+    {k:"nv", x:1130, y:126, w:190, h:120, c:"NV08", n:"Ký số",    s:"Ký số HSM/Service"},
+    {k:"ng", x:1335, y:126, w:190, h:120, c:"NG14", n:"AICycle",  s:"Định giá / AI OCR"},
+    {k:"nd", x:1135, y:30,  w:180, h:46,  c:"",     n:"Khách hàng / Đối tác"},
+    // Tích hợp & xử lý trung gian (chừa khe x≈565 và x≈820 cho mũi tên đi xuống)
+    {k:"th", x:310,  y:322, w:1215, h:50, c:"TH05 · TH08", n:"NHNo API / BancaAPI — Cổng trung gian tích hợp", bar:true},
+    {k:"tb", x:310,  y:400, w:220, h:70, c:"TB03", n:"QuyTrinh",  s:"Quản lý luồng"},
+    {k:"ng", x:600,  y:400, w:185, h:70, c:"NG01", n:"Agribank",  s:"Thu phí / Thanh toán"},
+    {k:"ng", x:855,  y:400, w:185, h:70, c:"NG04", n:"VNPAY",     s:"Cổng thanh toán trực tuyến"},
+    {k:"ng", x:1055, y:400, w:225, h:70, c:"NG06 · NG08 · NG09", n:"Hilo, SMS, Zalo", s:"Hilo, Viettel SMS, Zalo OA"},
+    {k:"nv", x:1295, y:400, w:230, h:70, c:"NV02", n:"Engine WF", s:"Xử lý quy trình nghiệp vụ"},
+    // Lớp tích hợp (cổng API)
+    {k:"th", x:305,  y:640, w:150, h:110, c:"TH03", n:"OpenAPI",   s:"API Gateway", icon:"</>"},
+    {k:"th", x:475,  y:640, w:180, h:110, c:"TH02", n:"ClosedAPI", s:"SFTP"},
+    // Core bảo hiểm / lớp nghiệp vụ
+    {k:"nv", x:725,  y:640, w:190, h:117, c:"NV01", n:"Nghiệp vụ lõi",     s:"Quản lý hợp đồng,\nKhách hàng & Bồi thường"},
+    {k:"tb", x:930,  y:640, w:190, h:117, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán & Quản lý\ndòng tiền"},
+    // Dữ liệu — cột trái: vận hành
+    {k:"dl", x:380,  y:870, w:180, h:70,  c:"DL04", n:"Kho File", oval:true},
+    {k:"dl", x:690,  y:867, w:220, h:76,  c:"DL01", n:"CSDL Giao dịch", oval:true},
+    // Dữ liệu — cột phải: bản sao & dự phòng
+    {k:"dl", x:1250, y:855, w:230, h:80,  c:"DL02", n:"CSDL Báo cáo",  s:"Phục vụ Báo cáo BI"},
+    {k:"dl", x:1250, y:950, w:230, h:80,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
   ];
-  // Mũi tên: danh sách điểm [x,y]; both:true = hai chiều
+  // Mũi tên: danh sách điểm [x,y]; both:true = hai chiều; dash:true = nét đứt
   const EDGES = [
-    {p:[[228,312],[268,312]]},
-    {p:[[374,299],[396,299]]},
-    {p:[[498,300],[536,410]]},
-    {p:[[610,385],[610,215]]},
-    {p:[[768,385],[768,215]]},
-    {p:[[926,385],[926,215]]},
-    {p:[[975,385],[1083,215]]},
-    {p:[[1001,413],[1095,380]]},
-    {p:[[1187,742],[1187,581]]},
-    {p:[[945,780],[1019,780]]},
-    {p:[[1263,54],[1263,94]], both:true},
+    {p:[[228,695],[303,695]]},                 // Người dùng → OpenAPI
+    {p:[[455,695],[473,695]]},                 // OpenAPI → ClosedAPI
+    {p:[[565,640],[565,374]]},                 // ClosedAPI → cổng trung gian
+    {p:[[405,322],[405,248]]},                 // cổng trung gian → SSO
+    {p:[[610,322],[610,248]]},                 //   → SMS
+    {p:[[815,322],[815,248]]},                 //   → Email
+    {p:[[1020,322],[1020,248]]},               //   → eInvoice
+    {p:[[820,372],[820,638]]},                 // cổng trung gian → NV01
+    {p:[[1225,76],[1225,124]], both:true},     // Khách hàng / Đối tác ↔ Ký số
+    {p:[[565,750],[733,873]]},                 // ClosedAPI → DL01
+    {p:[[820,757],[820,865]]},                 // NV01 → DL01
+    {p:[[1025,757],[870,874]]},                // TB02 → DL01
+    {p:[[909,898],[1248,893]], dash:true},     // DL01 ⇢ DL02
+    {p:[[905,916],[1248,988]], dash:true},     // DL01 ⇢ DL03
   ];
   const tx=(x,y,cls,str,anchor="middle")=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(str)}</text>`;
   const nodeSvg = nd => {
@@ -669,14 +684,16 @@ const SECTIONS = [
     const txt=lines.map(([cls,str,lh])=>{ y+=lh; return cls==="gap"?"":tx(cx,y-4,cls,str); }).join("");
     return `<g class="rk ${nd.k}"${one?` data-code="${nd.c}"`:""}>${shape}${txt}</g>`;
   };
-  const edgeSvg = e => `<path class="edge" d="M${e.p.map(q=>q.join(",")).join(" L")}" marker-end="url(#rmArrow)"${e.both?' marker-start="url(#rmArrowS)"':''}/>`;
+  const edgeSvg = e => `<path class="edge${e.dash?' dash':''}" d="M${e.p.map(q=>q.join(",")).join(" L")}" marker-end="url(#rmArrow)"${e.both?' marker-start="url(#rmArrowS)"':''}/>`;
   const groupSvg = g => `<g class="grp"><rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="10"/>${tx(g.x,g.y-10,"",g.t,"start")}</g>`;
-  const svg = `<svg viewBox="0 0 1600 880" role="img" aria-label="Sơ đồ quan hệ kiến trúc tổng thể ABIC">
+  const svg = `<svg viewBox="0 0 1600 1070" role="img" aria-label="Sơ đồ quan hệ kiến trúc tổng thể ABIC">
     <defs>
       <marker id="rmArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker>
       <marker id="rmArrowS" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M10,0 L0,5 L10,10 z"/></marker>
     </defs>
     ${GROUPS.map(groupSvg).join("")}
+    ${DIVIDERS.map(d=>`<line class="div" x1="${d.x1}" y1="${d.y1}" x2="${d.x2}" y2="${d.y2}"/>`).join("")}
+    ${LABELS.map(l=>`<text class="sub" x="${l.x}" y="${l.y}">${esc(l.t)}</text>`).join("")}
     ${EDGES.map(edgeSvg).join("")}
     ${NODES.map(nodeSvg).join("")}
   </svg>`;
