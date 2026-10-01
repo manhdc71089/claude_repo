@@ -245,6 +245,9 @@ abbr.gl:hover{background:var(--brand-soft);border-radius:3px}
 .rm .sub{fill:var(--ink-3);font-size:11px;font-weight:700;letter-spacing:.08em}
 .rm g[data-code]{cursor:pointer}
 .rm g.rk:hover .box{stroke-width:2.6}
+.rm g.big .t1{font-size:13px}
+.rm g.big .t2{font-size:18px;font-weight:700}
+.rm g.big .box{stroke-width:2.4}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px;font-size:12.5px}
@@ -599,6 +602,7 @@ const SECTIONS = [
 }},
 { id:"relmap", num:"⇄", group:"Tổng quan", title:"Sơ đồ quan hệ tổng thể", render(){
   /* Cấu hình sơ đồ (toạ độ trên khung 1600×880). Sửa nội dung ở đây.
+     big:true = ô nổi bật (chữ lớn hơn)
      k = màu theo lớp: nd người dùng · tb trình bày · th tích hợp · nv nghiệp vụ · dl dữ liệu · ng hệ thống ngoài · ht hạ tầng */
   const GROUPS = [
     {t:"LỚP ĐỐI TÁC",                             x:585,  y:130,  w:530,  h:110},
@@ -653,7 +657,7 @@ const SECTIONS = [
     {k:"th", x:750, y:548, w:160, h:522, c:"TH02", n:"ClosedAPI", s:"Cổng dữ liệu nội bộ\nCửa duy nhất vào CSDL"},
     // Ký số cho lớp ứng dụng
     {k:"th", x:370, y:1110, w:190, h:60, c:"TH08", n:"BancaAPI", s:"Ký số chứng từ"},
-    {k:"ht", x:600, y:1110, w:140, h:60, c:"HT01", n:"HSM",      s:"Lưu khóa, ký số"},
+    {k:"ht", x:205, y:1110, w:125, h:60, c:"HT01", n:"HSM",      s:"Lưu khóa, ký số"},
     // Core bảo hiểm / lớp nghiệp vụ
     {k:"nv", x:975,  y:590, w:150, h:90, c:"NV01", n:"Nghiệp vụ lõi",     s:"Hợp đồng,\nKhách hàng, Bồi thường"},
     {k:"tb", x:1140, y:590, w:150, h:90, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán &\nQuản lý dòng tiền"},
@@ -662,8 +666,8 @@ const SECTIONS = [
     {k:"tb", x:1332, y:600, w:100, h:70, c:"TB10", n:"Báo cáo",  s:"Nghiệp vụ"},
     {k:"tb", x:1440, y:600, w:95,  h:70, c:"TB25", n:"Power BI", s:"Phân tích"},
     // Dữ liệu — cột trái: vận hành
-    {k:"dl", x:520,  y:1235, w:180, h:70,  c:"DL04", n:"Kho File", oval:true},
-    {k:"dl", x:880,  y:1232, w:240, h:76,  c:"DL01", n:"CSDL Giao dịch", oval:true},
+    {k:"dl", x:480,  y:1220, w:250, h:100, c:"DL04", n:"Kho File", oval:true, big:true},
+    {k:"dl", x:850,  y:1215, w:300, h:110, c:"DL01", n:"CSDL Giao dịch", oval:true, big:true},
     // Dữ liệu — cột phải: bản sao & dự phòng
     {k:"dl", x:1330, y:1235, w:200, h:80,  c:"DL02", n:"CSDL Báo cáo",  s:"Phục vụ Báo cáo BI"},
     {k:"dl", x:1330, y:1330, w:200, h:80,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
@@ -686,7 +690,7 @@ const SECTIONS = [
     {p:[[560,877],[748,877]]}, {p:[[560,931],[748,931]]}, {p:[[560,985],[748,985]]},
     {p:[[560,1047],[748,1047]]},
     // cả lớp ứng dụng → BancaAPI → HSM
-    {p:[[465,1082],[465,1108]]}, {p:[[560,1140],[598,1140]]},
+    {p:[[465,1082],[465,1108]]}, {p:[[370,1140],[332,1140]]},
     // dịch vụ nền → đối tác
     {p:[[690,315],[690,222]]}, {p:[[860,315],[860,222]]}, {p:[[1030,315],[1030,222]]},
     // dịch vụ nền → ClosedAPI
@@ -694,18 +698,16 @@ const SECTIONS = [
     // thanh toán → OpenAPI
     {p:[[330,395],[330,480],[625,480],[625,546]]},
     {p:[[485,395],[485,460],[690,460],[690,546]]},
-    // ClosedAPI → nghiệp vụ lõi
-    {p:[[910,635],[973,635]]},
     // vào CSDL giao dịch
-    {p:[[830,1070],[915,1243]]},                // ClosedAPI → DL01
-    {p:[[1040,680],[1030,1231]]},               // NV01 → DL01
-    {p:[[1122,770],[1060,1235]]},               // NV02 → DL01
-    {p:[[1215,680],[1080,1242]]},               // TB02 → DL01
+    {p:[[830,1070],[900,1227]]},                // ClosedAPI → DL01
+    {p:[[1040,680],[1030,1214]]},               // NV01 → DL01
+    {p:[[1122,770],[1065,1218]]},               // NV02 → DL01
+    {p:[[1215,680],[1100,1227]]},               // TB02 → DL01
     // lớp báo cáo → CSDL báo cáo
     {p:[[1382,670],[1382,1233]]}, {p:[[1487,670],[1487,1233]]},
     // nhân bản, dự phòng
-    {p:[[1118,1258],[1328,1268]], dash:true},
-    {p:[[1110,1290],[1328,1365]], dash:true},
+    {p:[[1150,1262],[1328,1268]], dash:true},
+    {p:[[1135,1294],[1328,1365]], dash:true},
   ];
   const tx=(x,y,cls,str,anchor="middle")=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(str)}</text>`;
   const nodeSvg = nd => {
@@ -717,13 +719,13 @@ const SECTIONS = [
     // dòng chữ: [class, text, lineHeight]
     const lines=[];
     if(nd.icon) lines.push(["ico",nd.icon,24]);
-    if(nd.c) lines.push(["t1",nd.c,16]);
-    if(nd.n) lines.push(["t2",nd.n,18]);
+    if(nd.c) lines.push(["t1",nd.c,nd.big?19:16]);
+    if(nd.n) lines.push(["t2",nd.n,nd.big?24:18]);
     if(nd.s){ lines.push(["gap","",6]); nd.s.split("\n").forEach(l=>lines.push(["t3",l,15])); }
     const total=lines.reduce((a,l)=>a+l[2],0);
     let y=cy-total/2;
     const txt=lines.map(([cls,str,lh])=>{ y+=lh; return cls==="gap"?"":tx(cx,y-4,cls,str); }).join("");
-    return `<g class="rk ${nd.k}"${one?` data-code="${nd.c}"`:""}>${shape}${txt}</g>`;
+    return `<g class="rk ${nd.k}${nd.big?' big':''}"${one?` data-code="${nd.c}"`:""}>${shape}${txt}</g>`;
   };
   const edgeSvg = e => `<path class="edge${e.dash?' dash':''}" d="M${e.p.map(q=>q.join(",")).join(" L")}" marker-end="url(#rmArrow)"${e.both?' marker-start="url(#rmArrowS)"':''}/>`;
   const groupSvg = g => `<g class="grp"><rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="10"/>${g.end?tx(g.x+g.w,g.y-10,"",g.t,"end"):g.bottom?tx(g.x,g.y+g.h+16,"",g.t,"start"):tx(g.x,g.y-10,"",g.t,"start")}</g>`;
