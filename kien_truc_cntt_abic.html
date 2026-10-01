@@ -176,25 +176,25 @@ td.code,.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowr
 .aband{--lc:#5b6770;--lc-bg:var(--panel-2);--lc-bd:var(--line);--lc-ink:var(--ink-2);margin-top:12px;border:1px dashed var(--line);border-radius:12px;padding:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--panel-2)}
 .aband .agn{flex-direction:row;flex-wrap:wrap}
 .aband .bnote{font-size:12px;color:var(--ink-3)}
-.acol.nd{--lc:#3d5a80;--lc-bg:#eef2f8;--lc-bd:#d5deeb;--lc-ink:#3d5a80}
-.acol.tb{--lc:#0a6e3c;--lc-bg:#eaf5ef;--lc-bd:#cfe6d9;--lc-ink:#0a6e3c}
-.acol.th{--lc:#b35c00;--lc-bg:#fdf3e7;--lc-bd:#f1dcc0;--lc-ink:#a15300}
-.acol.nv{--lc:#6a3fa0;--lc-bg:#f3eefa;--lc-bd:#e0d4ef;--lc-ink:#6a3fa0}
-.acol.dl{--lc:#1f5fae;--lc-bg:#ebf2fb;--lc-bd:#d0dff2;--lc-ink:#1f5fae}
-.acol.ng{--lc:#8a4b2c;--lc-bg:#f7efea;--lc-bd:#e8d8cd;--lc-ink:#8a4b2c}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .acol.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
-:root:not([data-theme="light"]) .acol.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
-:root:not([data-theme="light"]) .acol.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
-:root:not([data-theme="light"]) .acol.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
-:root:not([data-theme="light"]) .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
-:root:not([data-theme="light"]) .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
+.acol.nd,.rk.nd{--lc:#3d5a80;--lc-bg:#eef2f8;--lc-bd:#d5deeb;--lc-ink:#3d5a80}
+.acol.tb,.rk.tb{--lc:#0a6e3c;--lc-bg:#eaf5ef;--lc-bd:#cfe6d9;--lc-ink:#0a6e3c}
+.acol.th,.rk.th{--lc:#b35c00;--lc-bg:#fdf3e7;--lc-bd:#f1dcc0;--lc-ink:#a15300}
+.acol.nv,.rk.nv{--lc:#6a3fa0;--lc-bg:#f3eefa;--lc-bd:#e0d4ef;--lc-ink:#6a3fa0}
+.acol.dl,.rk.dl{--lc:#1f5fae;--lc-bg:#ebf2fb;--lc-bd:#d0dff2;--lc-ink:#1f5fae}
+.acol.ng,.rk.ng{--lc:#8a4b2c;--lc-bg:#f7efea;--lc-bd:#e8d8cd;--lc-ink:#8a4b2c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .acol.nd,:root:not([data-theme="light"]) .rk.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
+:root:not([data-theme="light"]) .acol.tb,:root:not([data-theme="light"]) .rk.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
+:root:not([data-theme="light"]) .acol.th,:root:not([data-theme="light"]) .rk.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
+:root:not([data-theme="light"]) .acol.nv,:root:not([data-theme="light"]) .rk.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
+:root:not([data-theme="light"]) .acol.dl,:root:not([data-theme="light"]) .rk.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
+:root:not([data-theme="light"]) .acol.ng,:root:not([data-theme="light"]) .rk.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
 }
-:root[data-theme="dark"] .acol.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
-:root[data-theme="dark"] .acol.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
-:root[data-theme="dark"] .acol.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
-:root[data-theme="dark"] .acol.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
-:root[data-theme="dark"] .acol.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
-:root[data-theme="dark"] .acol.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
+:root[data-theme="dark"] .acol.nd,:root[data-theme="dark"] .rk.nd{--lc:#4f75a8;--lc-bg:#172131;--lc-bd:#26344a;--lc-ink:#9dbbe6}
+:root[data-theme="dark"] .acol.tb,:root[data-theme="dark"] .rk.tb{--lc:#1f8a55;--lc-bg:#13261c;--lc-bd:#1f3b2c;--lc-ink:#7fd6a5}
+:root[data-theme="dark"] .acol.th,:root[data-theme="dark"] .rk.th{--lc:#b36a14;--lc-bg:#2a1f12;--lc-bd:#3f2f1b;--lc-ink:#f0b76a}
+:root[data-theme="dark"] .acol.nv,:root[data-theme="dark"] .rk.nv{--lc:#7a52b3;--lc-bg:#211a2e;--lc-bd:#33284a;--lc-ink:#c4a6ef}
+:root[data-theme="dark"] .acol.dl,:root[data-theme="dark"] .rk.dl{--lc:#2f6fc0;--lc-bg:#14213a;--lc-bd:#22344f;--lc-ink:#8fbaf0}
+:root[data-theme="dark"] .acol.ng,:root[data-theme="dark"] .rk.ng{--lc:#9a5a38;--lc-bg:#271b15;--lc-bd:#3d2a20;--lc-ink:#e3a988}
 /* key points */
 .key{border:1px solid var(--brand);border-top:4px solid var(--brand);background:linear-gradient(180deg,var(--brand-soft),var(--panel) 90px);display:flex;flex-direction:column;gap:12px}
 .key .kh{display:flex;gap:12px;align-items:center}
@@ -226,6 +226,22 @@ abbr.gl:hover{background:var(--brand-soft);border-radius:3px}
 .cn{white-space:nowrap;font-size:12.5px;color:var(--ink-2)}
 .cn .c{margin-right:2px}
 .cnm{color:var(--ink);font-weight:500}
+/* relationship map (SVG) */
+.rk.ht{--lc:#5b6770;--lc-bg:var(--panel-2);--lc-bd:var(--line);--lc-ink:var(--ink-2)}
+.rm{overflow-x:auto}
+.rm svg{width:100%;height:auto;min-width:980px;display:block;font-family:inherit}
+.rm .grp rect{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:6 5}
+.rm .grp text{fill:var(--ink-2);font-size:12.5px;font-weight:700;letter-spacing:.06em}
+.rm .box{fill:var(--lc-bg);stroke:var(--lc);stroke-width:1.5}
+.rm .bar{stroke-width:2}
+.rm .t1{fill:var(--lc-ink);font-size:11px;font-weight:700;letter-spacing:.03em}
+.rm .t2{fill:var(--ink);font-size:13px;font-weight:600}
+.rm .t3{fill:var(--ink-3);font-size:11px}
+.rm .ico{fill:var(--lc);font-size:18px;font-weight:700}
+.rm .edge{stroke:var(--ink-2);stroke-width:1.6;fill:none}
+.rm .mk{fill:var(--ink-2)}
+.rm g[data-code]{cursor:pointer}
+.rm g.rk:hover .box{stroke-width:2.6}
 /* tooltip */
 #tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--panel);padding:8px 10px;border-radius:8px;font-size:12px;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:var(--shadow)}
 #tip b{display:block;margin-bottom:2px;font-size:12.5px}
@@ -578,6 +594,95 @@ const SECTIONS = [
     "Báo cáo đọc trên CSDL báo cáo, là bản sao GoldenGate của CSDL giao dịch."]))}
   `;
 }},
+{ id:"relmap", num:"⇄", group:"Tổng quan", title:"Sơ đồ quan hệ tổng thể", render(){
+  /* Cấu hình sơ đồ (toạ độ trên khung 1600×880). Sửa nội dung ở đây.
+     k = màu theo lớp: nd người dùng · tb trình bày · th tích hợp · nv nghiệp vụ · dl dữ liệu · ng hệ thống ngoài · ht hạ tầng */
+  const GROUPS = [
+    {t:"LỚP TRÌNH BÀY / NGƯỜI DÙNG",              x:30,   y:122, w:214,  h:370},
+    {t:"DỊCH VỤ NỀN & TÍCH HỢP (MICROSERVICES)",  x:512,  y:66,  w:1033, h:182},
+    {t:"LỚP TÍCH HỢP & XỬ LÝ TRUNG GIAN",         x:512,  y:280, w:512,  h:362},
+    {t:"CORE BẢO HIỂM / LỚP NGHIỆP VỤ",           x:1065, y:280, w:480,  h:362},
+    {t:"LỚP DỮ LIỆU (DATA)",                      x:512,  y:683, w:1033, h:170},
+  ];
+  const NODES = [
+    // Người dùng
+    {k:"nd", x:46,  y:140, w:182, h:100, c:"ND01–ND02", n:"Nội bộ / Người bán",     s:"TB01, TB02, TB13, TB17"},
+    {k:"nd", x:46,  y:262, w:182, h:100, c:"ND03 · ND04", n:"Khách hàng & Agribank", s:"TB18, TB19, TB20, MyAbic"},
+    {k:"nd", x:46,  y:385, w:182, h:92,  c:"ND05", n:"Đối tác & Power BI",           s:"TB05, TB09, TB10, TB25"},
+    // Cổng
+    {k:"th", x:270, y:245, w:104, h:108, c:"TH03", n:"OpenAPI", s:"API Gateway", icon:"</>"},
+    {k:"th", x:398, y:245, w:100, h:108, c:"TH02", n:"ClosedAPI", s:"SFTP"},
+    // Dịch vụ nền & tích hợp
+    {k:"th", x:536,  y:96, w:152, h:117, c:"TH01", n:"SSO",      s:"Xác thực tập trung"},
+    {k:"nv", x:698,  y:96, w:152, h:117, c:"NV03", n:"SMS",      s:"SMS Service (Viettel)"},
+    {k:"nv", x:861,  y:96, w:152, h:117, c:"NV04", n:"Email",    s:"Email Service"},
+    {k:"nv", x:1024, y:96, w:152, h:117, c:"NV06", n:"eInvoice", s:"Hóa đơn điện tử"},
+    {k:"nv", x:1187, y:96, w:152, h:117, c:"NV08", n:"Ký số",    s:"Ký số HSM/Service"},
+    {k:"ng", x:1350, y:96, w:152, h:117, c:"NG14", n:"AICycle",  s:"Định giá / AI OCR"},
+    {k:"nd", x:1173, y:6,  w:180, h:46,  c:"",     n:"Khách hàng / Đối tác"},
+    // Tích hợp & xử lý trung gian
+    {k:"tb", x:536, y:289, w:141, h:73,  c:"TB03", n:"QuyTrinh", s:"Quản lý luồng"},
+    {k:"ng", x:860, y:289, w:141, h:73,  c:"NG01", n:"Agribank", s:"Thu phí / Thanh toán"},
+    {k:"th", x:536, y:385, w:465, h:56,  c:"TH05 · TH08", n:"NHNo API / BancaAPI — Cổng trung gian tích hợp", bar:true},
+    {k:"ng", x:536, y:490, w:141, h:117, c:"NG04", n:"VNPAY", s:"Cổng thanh toán\ntrực tuyến"},
+    {k:"ng", x:698, y:490, w:141, h:117, c:"NG06 · NG08 · NG09", n:"Hilo, SMS, Zalo", s:"Hilo, Viettel SMS,\nZalo OA"},
+    {k:"nv", x:860, y:490, w:141, h:117, c:"NV02", n:"Engine WF", s:"Xử lý quy trình\nnghiệp vụ"},
+    // Core bảo hiểm
+    {k:"nv", x:1097, y:306, w:180, h:117, c:"NV01", n:"Nghiệp vụ lõi", s:"Quản lý hợp đồng,\nKhách hàng & Bồi thường"},
+    {k:"tb", x:1318, y:306, w:180, h:117, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán & Quản lý\ndòng tiền"},
+    {k:"dl", x:1124, y:509, w:126, h:70,  c:"DL01", n:"CSDL Giao dịch", oval:true},
+    {k:"dl", x:1318, y:499, w:180, h:91,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
+    // Dữ liệu
+    {k:"dl", x:765,  y:735, w:180, h:91, c:"DL02", n:"CSDL Báo cáo", s:"Phục vụ Báo cáo BI"},
+    {k:"dl", x:1021, y:745, w:126, h:70, c:"DL04", n:"Kho File", oval:true},
+    {k:"ht", x:1287, y:735, w:195, h:91, c:"HT01–HT02", n:"HSM / VPN", s:"Hạ tầng dùng chung"},
+  ];
+  // Mũi tên: danh sách điểm [x,y]; both:true = hai chiều
+  const EDGES = [
+    {p:[[228,312],[268,312]]},
+    {p:[[374,299],[396,299]]},
+    {p:[[498,300],[536,410]]},
+    {p:[[610,385],[610,215]]},
+    {p:[[768,385],[768,215]]},
+    {p:[[926,385],[926,215]]},
+    {p:[[975,385],[1083,215]]},
+    {p:[[1001,413],[1095,380]]},
+    {p:[[1187,742],[1187,581]]},
+    {p:[[945,780],[1019,780]]},
+    {p:[[1263,54],[1263,94]], both:true},
+  ];
+  const tx=(x,y,cls,str,anchor="middle")=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(str)}</text>`;
+  const nodeSvg = nd => {
+    const one = /^[A-Z]{2}\d{2}$/.test(nd.c) && BY[nd.c];
+    const cx = nd.x+nd.w/2, cy = nd.y+nd.h/2;
+    const shape = nd.oval
+      ? `<ellipse class="box" cx="${cx}" cy="${cy}" rx="${nd.w/2}" ry="${nd.h/2}"/>`
+      : `<rect class="box${nd.bar?' bar':''}" x="${nd.x}" y="${nd.y}" width="${nd.w}" height="${nd.h}" rx="9"/>`;
+    // dòng chữ: [class, text, lineHeight]
+    const lines=[];
+    if(nd.icon) lines.push(["ico",nd.icon,24]);
+    if(nd.c) lines.push(["t1",nd.c,16]);
+    if(nd.n) lines.push(["t2",nd.n,18]);
+    if(nd.s){ lines.push(["gap","",6]); nd.s.split("\n").forEach(l=>lines.push(["t3",l,15])); }
+    const total=lines.reduce((a,l)=>a+l[2],0);
+    let y=cy-total/2;
+    const txt=lines.map(([cls,str,lh])=>{ y+=lh; return cls==="gap"?"":tx(cx,y-4,cls,str); }).join("");
+    return `<g class="rk ${nd.k}"${one?` data-code="${nd.c}"`:""}>${shape}${txt}</g>`;
+  };
+  const edgeSvg = e => `<path class="edge" d="M${e.p.map(q=>q.join(",")).join(" L")}" marker-end="url(#rmArrow)"${e.both?' marker-start="url(#rmArrowS)"':''}/>`;
+  const groupSvg = g => `<g class="grp"><rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="10"/>${tx(g.x,g.y-10,"",g.t,"start")}</g>`;
+  const svg = `<svg viewBox="0 0 1600 880" role="img" aria-label="Sơ đồ quan hệ kiến trúc tổng thể ABIC">
+    <defs>
+      <marker id="rmArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="rmArrowS" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M10,0 L0,5 L10,10 z"/></marker>
+    </defs>
+    ${GROUPS.map(groupSvg).join("")}
+    ${EDGES.map(edgeSvg).join("")}
+    ${NODES.map(nodeSvg).join("")}
+  </svg>`;
+  return `<p class="lead">Quan hệ giữa người dùng, cổng tích hợp, dịch vụ nền, lõi nghiệp vụ và dữ liệu. Di chuột lên thành phần để xem chi tiết, bấm để mở danh mục.</p>
+  ${card("Sơ đồ quan hệ kiến trúc tổng thể",`<div class="rm">${svg}</div>`)}`;
+}},
 { id:"intro", num:"1", group:"Nội dung", title:"Giới thiệu", render(){ return `
   <div class="grid g2">
     ${card("1.1 Mục đích",`<p style="margin:0;color:var(--ink-2)">Tài liệu mô tả kiến trúc hệ thống thông tin ABIC đang vận hành: người sử dụng, ứng dụng, tích hợp, dữ liệu, hạ tầng. Đây là căn cứ chung khi triển khai dự án, làm việc với đối tác và đánh giá tác động của thay đổi.</p>`)}
@@ -840,7 +945,7 @@ const SECTIONS = [
 const GL_MAP = Object.fromEntries(GLOSS.map(([t,m])=>[t.toLowerCase(),[t,m]]));
 const GL_RE = new RegExp("(?<![\\p{L}\\p{N}_])(" + GLOSS.map(g=>g[0]).sort((a,b)=>b.length-a.length)
   .map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/ /g,"\\s+")).join("|") + ")(?![\\p{L}\\p{N}_])","giu");
-const GL_SKIP = ".cn,.cnm,[data-code],[data-term],.no-gl,th,input,button,script,style,#tip,.kt,h1";
+const GL_SKIP = "svg,.cn,.cnm,[data-code],[data-term],.no-gl,th,input,button,script,style,#tip,.kt,h1";
 function glossify(root){
   if(!root) return;
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>
