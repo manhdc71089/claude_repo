@@ -601,34 +601,28 @@ const SECTIONS = [
   /* Cấu hình sơ đồ (toạ độ trên khung 1600×880). Sửa nội dung ở đây.
      k = màu theo lớp: nd người dùng · tb trình bày · th tích hợp · nv nghiệp vụ · dl dữ liệu · ng hệ thống ngoài · ht hạ tầng */
   const GROUPS = [
-    {t:"LỚP TRÌNH BÀY / NGƯỜI DÙNG",              x:30,   y:510, w:214,  h:360},
-    {t:"DỊCH VỤ NỀN & TÍCH HỢP (MICROSERVICES)",  x:290,  y:96,  w:1255, h:170},
-    {t:"LỚP TÍCH HỢP & XỬ LÝ TRUNG GIAN",         x:290,  y:300, w:1255, h:195},
-    {t:"LỚP TÍCH HỢP (CỔNG API)",                 x:290,  y:600, w:385,  h:190},
-    {t:"CORE BẢO HIỂM / LỚP NGHIỆP VỤ",           x:705,  y:600, w:435,  h:190},
-    {t:"LỚP DỮ LIỆU (DATA)",                      x:290,  y:820, w:1255, h:230},
+    {t:"DỊCH VỤ NỀN & TÍCH HỢP (MICROSERVICES)",  x:290,  y:96,   w:1255, h:170},
+    {t:"LỚP TÍCH HỢP & XỬ LÝ TRUNG GIAN",         x:290,  y:300,  w:1255, h:195},
+    {t:"LỚP TRÌNH BÀY",                          x:20,   y:540,  w:190,  h:436},
+    {t:"LỚP TÍCH HỢP (CỔNG API)",                 x:240,  y:540,  w:435,  h:436},
+    {t:"CORE BẢO HIỂM / LỚP NGHIỆP VỤ",           x:705,  y:540,  w:435,  h:250},
+    {t:"LỚP DỮ LIỆU (DATA)",                      x:240,  y:1000, w:1305, h:230},
   ];
   // Đường kẻ phụ và nhãn phụ (vd chia cột trong lớp dữ liệu)
-  const DIVIDERS = [{x1:1160, y1:835, x2:1160, y2:1035}];
+  const DIVIDERS = [{x1:1160, y1:1015, x2:1160, y2:1215}];
   const LABELS = [
-    {x:310,  y:846, t:"VẬN HÀNH"},
-    {x:1180, y:846, t:"BẢN SAO & DỰ PHÒNG"},
+    {x:260,  y:1026, t:"VẬN HÀNH"},
+    {x:1180, y:1026, t:"BẢN SAO & DỰ PHÒNG"},
+    {x:260,  y:556,  t:"TRUY CẬP & ĐỊNH DANH"},
   ];
   const NODES = [
-    // Người dùng
-    {k:"nd", x:46,  y:530, w:182, h:100, c:"ND01–ND02", n:"Nội bộ / Người bán",     s:"TB01, TB02, TB13, TB17"},
-    {k:"nd", x:46,  y:645, w:182, h:100, c:"ND03 · ND04", n:"Khách hàng & Agribank", s:"TB18, TB19, TB20, MyAbic"},
-    {k:"nd", x:46,  y:760, w:182, h:92,  c:"ND05", n:"Đối tác & Power BI",           s:"TB05, TB09, TB10, TB25"},
-    // Hạ tầng dùng chung
-    {k:"ht", x:46,  y:900, w:182, h:91,  c:"HT01–HT02", n:"HSM / VPN", s:"Hạ tầng dùng chung"},
     // Dịch vụ nền & tích hợp
-    {k:"th", x:310,  y:126, w:190, h:120, c:"TH01", n:"SSO",      s:"Xác thực tập trung"},
-    {k:"nv", x:515,  y:126, w:190, h:120, c:"NV03", n:"SMS",      s:"SMS Service (Viettel)"},
-    {k:"nv", x:720,  y:126, w:190, h:120, c:"NV04", n:"Email",    s:"Email Service"},
-    {k:"nv", x:925,  y:126, w:190, h:120, c:"NV06", n:"eInvoice", s:"Hóa đơn điện tử"},
-    {k:"nv", x:1130, y:126, w:190, h:120, c:"NV08", n:"Ký số",    s:"Ký số HSM/Service"},
-    {k:"ng", x:1335, y:126, w:190, h:120, c:"NG14", n:"AICycle",  s:"Định giá / AI OCR"},
-    {k:"nd", x:1135, y:30,  w:180, h:46,  c:"",     n:"Khách hàng / Đối tác"},
+    {k:"nv", x:310,  y:126, w:230, h:120, c:"NV03", n:"SMS",      s:"SMS Service (Viettel)"},
+    {k:"nv", x:556,  y:126, w:230, h:120, c:"NV04", n:"Email",    s:"Email Service"},
+    {k:"nv", x:802,  y:126, w:230, h:120, c:"NV06", n:"eInvoice", s:"Hóa đơn điện tử"},
+    {k:"nv", x:1048, y:126, w:230, h:120, c:"NV08", n:"Ký số",    s:"Ký số HSM/Service"},
+    {k:"ng", x:1294, y:126, w:230, h:120, c:"NG14", n:"AICycle",  s:"Định giá / AI OCR"},
+    {k:"nd", x:1073, y:30,  w:180, h:46,  c:"",     n:"Khách hàng / Đối tác"},
     // Tích hợp & xử lý trung gian (chừa khe x≈565 và x≈820 cho mũi tên đi xuống)
     {k:"th", x:310,  y:322, w:1215, h:50, c:"TH05 · TH08", n:"NHNo API / BancaAPI — Cổng trung gian tích hợp", bar:true},
     {k:"tb", x:310,  y:400, w:220, h:70, c:"TB03", n:"QuyTrinh",  s:"Quản lý luồng"},
@@ -636,35 +630,53 @@ const SECTIONS = [
     {k:"ng", x:855,  y:400, w:185, h:70, c:"NG04", n:"VNPAY",     s:"Cổng thanh toán trực tuyến"},
     {k:"ng", x:1055, y:400, w:225, h:70, c:"NG06 · NG08 · NG09", n:"Hilo, SMS, Zalo", s:"Hilo, Viettel SMS, Zalo OA"},
     {k:"nv", x:1295, y:400, w:230, h:70, c:"NV02", n:"Engine WF", s:"Xử lý quy trình nghiệp vụ"},
-    // Lớp tích hợp (cổng API)
-    {k:"th", x:305,  y:640, w:150, h:110, c:"TH03", n:"OpenAPI",   s:"API Gateway", icon:"</>"},
-    {k:"th", x:475,  y:640, w:180, h:110, c:"TH02", n:"ClosedAPI", s:"SFTP"},
+    // Người dùng (thứ tự xếp theo đường vào để mũi tên không cắt nhau)
+    {k:"nd", x:34, y:572, w:162, h:122, c:"ND01", n:"Nội bộ ABIC",       s:"Desktop VB6, web nội bộ"},
+    {k:"nd", x:34, y:714, w:162, h:58,  c:"ND02", n:"Người bán",         s:"Banca, Ctien, Sale"},
+    {k:"nd", x:34, y:778, w:162, h:58,  c:"ND03", n:"Khách hàng",        s:"Web, MyAbic, Payment"},
+    {k:"nd", x:34, y:842, w:162, h:58,  c:"ND05", n:"Hệ thống đối tác",  s:"Bán, nhúng bảo hiểm"},
+    {k:"nd", x:34, y:906, w:162, h:60,  c:"ND04", n:"Đầu mối Agribank",  s:"BC2C"},
+    // Lớp tích hợp: cổng vào theo đối tượng → ClosedAPI
+    {k:"ht", x:258, y:572, w:172, h:58,  c:"HT02", n:"VPN",          s:"Truy cập từ xa"},
+    {k:"th", x:258, y:636, w:172, h:58,  c:"TH01", n:"SSO",          s:"Xác thực tập trung"},
+    {k:"th", x:258, y:714, w:172, h:186, c:"TH03", n:"OpenAPI",      s:"API Gateway", icon:"</>"},
+    {k:"th", x:258, y:906, w:172, h:60,  c:"TH04", n:"OpenAPI Banca", s:"Kênh Agribank"},
+    {k:"th", x:472, y:572, w:186, h:394, c:"TH02", n:"ClosedAPI",    s:"Cổng dữ liệu nội bộ\nCửa duy nhất vào CSDL"},
     // Core bảo hiểm / lớp nghiệp vụ
-    {k:"nv", x:725,  y:640, w:190, h:117, c:"NV01", n:"Nghiệp vụ lõi",     s:"Quản lý hợp đồng,\nKhách hàng & Bồi thường"},
-    {k:"tb", x:930,  y:640, w:190, h:117, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán & Quản lý\ndòng tiền"},
+    {k:"nv", x:725,  y:600, w:190, h:117, c:"NV01", n:"Nghiệp vụ lõi",     s:"Quản lý hợp đồng,\nKhách hàng & Bồi thường"},
+    {k:"tb", x:930,  y:600, w:190, h:117, c:"TB02", n:"Tài chính Kế toán", s:"Hạch toán & Quản lý\ndòng tiền"},
+    // Hạ tầng dùng chung
+    {k:"ht", x:34,  y:1040, w:162, h:70, c:"HT01", n:"HSM", s:"Hạ tầng dùng chung"},
     // Dữ liệu — cột trái: vận hành
-    {k:"dl", x:380,  y:870, w:180, h:70,  c:"DL04", n:"Kho File", oval:true},
-    {k:"dl", x:690,  y:867, w:220, h:76,  c:"DL01", n:"CSDL Giao dịch", oval:true},
+    {k:"dl", x:380,  y:1050, w:180, h:70,  c:"DL04", n:"Kho File", oval:true},
+    {k:"dl", x:690,  y:1047, w:220, h:76,  c:"DL01", n:"CSDL Giao dịch", oval:true},
     // Dữ liệu — cột phải: bản sao & dự phòng
-    {k:"dl", x:1250, y:855, w:230, h:80,  c:"DL02", n:"CSDL Báo cáo",  s:"Phục vụ Báo cáo BI"},
-    {k:"dl", x:1250, y:950, w:230, h:80,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
+    {k:"dl", x:1250, y:1035, w:230, h:80,  c:"DL02", n:"CSDL Báo cáo",  s:"Phục vụ Báo cáo BI"},
+    {k:"dl", x:1250, y:1130, w:230, h:80,  c:"DL03", n:"CSDL Dự phòng", s:"Bảo mật & Sao lưu"},
   ];
   // Mũi tên: danh sách điểm [x,y]; both:true = hai chiều; dash:true = nét đứt
   const EDGES = [
-    {p:[[228,695],[303,695]]},                 // Người dùng → OpenAPI
-    {p:[[455,695],[473,695]]},                 // OpenAPI → ClosedAPI
-    {p:[[565,640],[565,374]]},                 // ClosedAPI → cổng trung gian
-    {p:[[405,322],[405,248]]},                 // cổng trung gian → SSO
-    {p:[[610,322],[610,248]]},                 //   → SMS
-    {p:[[815,322],[815,248]]},                 //   → Email
-    {p:[[1020,322],[1020,248]]},               //   → eInvoice
-    {p:[[820,372],[820,638]]},                 // cổng trung gian → NV01
-    {p:[[1225,76],[1225,124]], both:true},     // Khách hàng / Đối tác ↔ Ký số
-    {p:[[565,750],[733,873]]},                 // ClosedAPI → DL01
-    {p:[[820,757],[820,865]]},                 // NV01 → DL01
-    {p:[[1025,757],[870,874]]},                // TB02 → DL01
-    {p:[[909,898],[1248,893]], dash:true},     // DL01 ⇢ DL02
-    {p:[[905,916],[1248,988]], dash:true},     // DL01 ⇢ DL03
+    {p:[[196,601],[256,601]]},                 // ND01 → VPN
+    {p:[[196,665],[256,665]]},                 // ND01 → SSO
+    {p:[[196,743],[256,743]]},                 // ND02 → OpenAPI
+    {p:[[196,807],[256,807]]},                 // ND03 → OpenAPI
+    {p:[[196,871],[256,871]]},                 // ND05 → OpenAPI
+    {p:[[196,936],[256,936]]},                 // ND04 → OpenAPI Banca
+    {p:[[430,601],[470,601]]},                 // VPN → ClosedAPI
+    {p:[[430,665],[470,665]]},                 // SSO → ClosedAPI
+    {p:[[430,807],[470,807]]},                 // OpenAPI → ClosedAPI
+    {p:[[430,936],[470,936]]},                 // OpenAPI Banca → ClosedAPI
+    {p:[[565,572],[565,374]]},                 // ClosedAPI → cổng trung gian
+    {p:[[425,322],[425,248]]},                 // cổng trung gian → SMS
+    {p:[[671,322],[671,248]]},                 //   → Email
+    {p:[[917,322],[917,248]]},                 //   → eInvoice
+    {p:[[820,372],[820,598]]},                 // cổng trung gian → NV01
+    {p:[[1163,76],[1163,124]], both:true},     // Khách hàng / Đối tác ↔ Ký số
+    {p:[[565,966],[733,1053]]},                // ClosedAPI → DL01
+    {p:[[820,717],[820,1045]]},                // NV01 → DL01
+    {p:[[1025,717],[870,1054]]},               // TB02 → DL01
+    {p:[[909,1078],[1248,1073]], dash:true},   // DL01 ⇢ DL02
+    {p:[[905,1096],[1248,1168]], dash:true},   // DL01 ⇢ DL03
   ];
   const tx=(x,y,cls,str,anchor="middle")=>`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${esc(str)}</text>`;
   const nodeSvg = nd => {
@@ -686,7 +698,7 @@ const SECTIONS = [
   };
   const edgeSvg = e => `<path class="edge${e.dash?' dash':''}" d="M${e.p.map(q=>q.join(",")).join(" L")}" marker-end="url(#rmArrow)"${e.both?' marker-start="url(#rmArrowS)"':''}/>`;
   const groupSvg = g => `<g class="grp"><rect x="${g.x}" y="${g.y}" width="${g.w}" height="${g.h}" rx="10"/>${tx(g.x,g.y-10,"",g.t,"start")}</g>`;
-  const svg = `<svg viewBox="0 0 1600 1070" role="img" aria-label="Sơ đồ quan hệ kiến trúc tổng thể ABIC">
+  const svg = `<svg viewBox="0 0 1600 1250" role="img" aria-label="Sơ đồ quan hệ kiến trúc tổng thể ABIC">
     <defs>
       <marker id="rmArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker>
       <marker id="rmArrowS" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M10,0 L0,5 L10,10 z"/></marker>
